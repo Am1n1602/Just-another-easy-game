@@ -9,6 +9,6 @@ class Terrain
 
 public:
 	static void LoadBackground();
-	static void DrawBackground(bool isBackgroundLoaded);
+	static void DrawBackground();
 	
 };

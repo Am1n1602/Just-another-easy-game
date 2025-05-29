@@ -1,8 +1,13 @@
 #include "game.h"
 #include "terrain.h"
 
+// Initial the global variables
+
 MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false) {}
 MainGame::~MainGame(){}
+
+
+// Draw the main menu
 
 void MainGame::DrawMenu()
 
@@ -18,12 +23,16 @@ void MainGame::DrawMenu()
 	DrawText(start, SCREENWIDTH / 2 - startWidth / 2, 2*SCREENHEIGHT/ 3, 30, DARKGRAY);
 }
 
+// Draw the Playing Arena
+
 void MainGame::DrawPlaying()
 
 {
-	Terrain::DrawBackground(isLoaded);
+	Terrain::DrawBackground();
 
 }
+
+// Update the Playing area 
 
 void MainGame::UpdatePlaying(float deltaTime)
 
@@ -35,6 +44,8 @@ void MainGame::UpdatePlaying(float deltaTime)
 	}
 }
 
+// Changes main menu to playing
+
 void MainGame::UpdateMenu(float deltaTime)
 
 {
@@ -44,6 +55,8 @@ void MainGame::UpdateMenu(float deltaTime)
 		currentState = GameState::PLAYING;
 	}
 }
+
+// Main update function
 
 void MainGame::Update(float deltaTime)
 
@@ -60,6 +73,8 @@ void MainGame::Update(float deltaTime)
 		break;
 	}
 }
+
+// Main draw function
 
 void MainGame::Draw()
 

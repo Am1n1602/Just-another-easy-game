@@ -1,7 +1,10 @@
 #include "terrain.h"
 #include "game.h"
 
+// give ID to initial background as 0
 static Texture background = { 0 };
+
+// Load background only once
 
 void Terrain::LoadBackground()
 
@@ -11,7 +14,9 @@ void Terrain::LoadBackground()
 	}
 }
 
-void Terrain::DrawBackground(bool isBackgroundLoaded)
+// Draw background every frame
+
+void Terrain::DrawBackground()
 
 {
 	if (background.id != 0) {
