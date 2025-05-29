@@ -28,6 +28,8 @@ int main()
 		BeginDrawing();
 		ClearBackground(BLACK);
 
+		game.Update(deltaTime);
+
 		game.Draw();
 
 
