@@ -5,7 +5,7 @@
 const int SCREENHEIGHT = 720;
 const int SCREENWIDTH = 1080;
 
-//<- TODO: Add the background class and imply it ->//
+//<- TODO: Add the player class and imply it ->//
 
 enum class GameState
 

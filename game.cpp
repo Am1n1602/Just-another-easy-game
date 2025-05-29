@@ -1,11 +1,13 @@
 #include "game.h"
 #include "terrain.h"
+#include "player.h"
 
 // Initial the global variables
 
 MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false) {}
 MainGame::~MainGame(){}
 
+PlayerAnimation player;
 
 // Draw the main menu
 
@@ -21,6 +23,7 @@ void MainGame::DrawMenu()
 	const char* start = "Press SPACE to Start";
 	int startWidth = MeasureText(start, 30);
 	DrawText(start, SCREENWIDTH / 2 - startWidth / 2, 2*SCREENHEIGHT/ 3, 30, DARKGRAY);
+
 }
 
 // Draw the Playing Arena
@@ -29,6 +32,8 @@ void MainGame::DrawPlaying()
 
 {
 	Terrain::DrawBackground();
+	Player::DrawPlayer(player);
+	
 
 }
 
@@ -40,8 +45,10 @@ void MainGame::UpdatePlaying(float deltaTime)
 	if (!isLoaded)
 	{
 		Terrain::LoadBackground(); // Load resources only once
+		Player::LoadPlayer();
 		isLoaded = true;
 	}
+	player.PlayerAnimationUpdate(deltaTime);
 }
 
 // Changes main menu to playing
