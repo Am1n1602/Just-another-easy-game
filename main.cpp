@@ -2,15 +2,21 @@
 #include "game.h"
 
 int main()
+
 {
 	// Initialization 
 
-	InitWindow(SCREENWIDTH, SCREENHEIGHT, "Prototype");
+	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
+
+	// Initialise the game
+	MainGame game;
+
 
 	// Main game loop
 
 	while (!WindowShouldClose())
+
 	{
 		// Update
 
@@ -20,7 +26,11 @@ int main()
 
 		// Drawing on screen
 		BeginDrawing();
-		ClearBackground(SKYBLUE);
+		ClearBackground(BLACK);
+
+		game.Draw();
+
+
 
 		EndDrawing();
 
