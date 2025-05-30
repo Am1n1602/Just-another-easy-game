@@ -7,7 +7,9 @@
 MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false) {}
 MainGame::~MainGame(){}
 
-PlayerAnimation player;
+PlayerAnimation playerAnim;
+Player player;
+
 
 // Draw the main menu
 
@@ -32,7 +34,7 @@ void MainGame::DrawPlaying()
 
 {
 	Terrain::DrawBackground();
-	Player::DrawPlayer(player);
+	player.DrawPlayer(playerAnim);
 	
 
 }
@@ -48,7 +50,9 @@ void MainGame::UpdatePlaying(float deltaTime)
 		Player::LoadPlayer();
 		isLoaded = true;
 	}
-	player.PlayerAnimationUpdate(deltaTime);
+	player.PlayerPositionUpdate(player.PlayerPosition);
+	playerAnim.PlayerAnimationUpdate(deltaTime);
+
 }
 
 // Changes main menu to playing
