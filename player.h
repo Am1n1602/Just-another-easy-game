@@ -28,10 +28,15 @@ class Player
 
 {
 private:
-	
+	const float jumpForce;
+	const float gravity;
+	float verticalJumpVelocity;
+	float Groundlevel;
 
 
 public:
+
+	bool isJumping;
 
    PlayerState currentPlayerState;
 	Vector2 PlayerVelocity;

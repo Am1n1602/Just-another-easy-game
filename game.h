@@ -6,7 +6,6 @@ const int SCREENHEIGHT = 720;
 const int SCREENWIDTH = 1080;
 
 
-
 enum class GameState
 
 {

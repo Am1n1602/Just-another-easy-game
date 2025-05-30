@@ -2,19 +2,30 @@
 
 #include <raylib.h>
 
-class Animation
+enum class AnimationType
+
 {
+	REPEATING,
+	ONESHOT,
+};
+
+class Animation
+
+{
+private:
+
 	int firstFrame;
-	int lastFrame;
 	int currentFrame;
+	int lastFrame;
 	float animationSpeed;
 	float durationLeft;
+
 public:
 
-
-
+	bool isFinished() const;
+	AnimationType currentAnimationType;
 	Animation();
 	~Animation();
 	void AnimationUpdate(float deltaTime);
-	Rectangle animationFrame(int numberFrameperRow) const; // Marked as const to allow usage with const objects  
+	Rectangle animationFrame(int numberFrameperRow, AnimationType current);// Marked as const to allow usage with const objects  
 };

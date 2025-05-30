@@ -28,7 +28,6 @@ void MainGame::DrawMenu()
 	const char* start = "Press SPACE to Start";
 	int startWidth = MeasureText(start, 30);
 	DrawText(start, SCREENWIDTH / 2 - startWidth / 2, 2*SCREENHEIGHT/ 3, 30, DARKGRAY);
-
 }
 
 // Draw the Playing Arena
@@ -38,8 +37,6 @@ void MainGame::DrawPlaying()
 {
 	Terrain::DrawBackground();
 	player.DrawPlayer(PlayerAnim);
-	
-
 }
 
 // Update the Playing area 
@@ -48,6 +45,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 
 {
 	if (!isLoaded)
+
 	{
 		Terrain::LoadBackground(); // Load resources only once
 		Player::LoadPlayer();
@@ -55,6 +53,12 @@ void MainGame::UpdatePlaying(float deltaTime)
 	}
 	player.PlayerPositionUpdate(player.PlayerPosition);
 	PlayerAnim.AnimationUpdate(deltaTime);
+
+
+	// if (IsKeyPressed(KEY_ESCAPE))
+	//{
+	//	currentState = GameState::MENU;
+	//} Uncomment in the final version 
 
 }
 
