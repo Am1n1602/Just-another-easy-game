@@ -5,7 +5,7 @@
 const int SCREENHEIGHT = 720;
 const int SCREENWIDTH = 1080;
 
-//<- TODO: Add the player class and imply it ->//
+
 
 enum class GameState
 

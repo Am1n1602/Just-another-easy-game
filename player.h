@@ -1,7 +1,7 @@
 #pragma once
 
 #include <raylib.h>
-
+#include "animation.h"
 enum Direction
 
 {
@@ -19,27 +19,12 @@ enum PlayerState
 	DEAD,
 };
 
-class PlayerAnimation  
-{  
-   int firstFrame;  
-   int lastFrame;  
-   int currentFrame;  
-   float animationSpeed;  
-   float durationLeft;  
-public:  
-	
-	
-
-   PlayerAnimation();  
-   ~PlayerAnimation();  
-   void PlayerAnimationUpdate(float deltaTime);  
-   Rectangle animationFrame(int numberFrameperRow) const; // Marked as const to allow usage with const objects  
-};   
 
 
 
 
-class Player:PlayerAnimation
+
+class Player
 
 {
 private:
@@ -59,5 +44,5 @@ public:
 	void PlayerPositionUpdate(Vector2 PlayerPosition);
 
 	static void LoadPlayer();
-	void DrawPlayer(const PlayerAnimation& playerAnim);
+	void DrawPlayer(Animation& PlayerAnim);
 };

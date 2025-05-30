@@ -1,37 +1,7 @@
 #include "player.h"
 #include "game.h"
+#include "animation.h"
 
-PlayerAnimation::PlayerAnimation() : firstFrame(0),lastFrame(3),currentFrame(0),
-animationSpeed(0.1),durationLeft(0.1) {}
-
-PlayerAnimation::~PlayerAnimation() {}
-
-void PlayerAnimation::PlayerAnimationUpdate(float deltaTime)
-
-{
-	durationLeft -= deltaTime;
-	if (durationLeft <= 0.0)
-
-	{
-		durationLeft = animationSpeed;
-		currentFrame++;
-
-		if (currentFrame > lastFrame)
-
-		{
-			currentFrame = firstFrame;
-		}
-	}
-}
-
-Rectangle PlayerAnimation::animationFrame(int numberFrameperRow) const
-
-{
-	int x = (currentFrame % numberFrameperRow) * 48;
-	int y = (currentFrame / numberFrameperRow) * 48;
-
-	return Rectangle({ (float)x,(float)y,48.0,48.0 });
-}
 
 // TODO <-Need to use variable in playerVelocity and playerPosition->
 
@@ -101,7 +71,7 @@ void Player::LoadPlayer()
 	}
 }
 
-void Player::DrawPlayer(const PlayerAnimation& playerAnim)
+void Player::DrawPlayer(Animation& PlayerAnim)
 
 {
 	int offset = -24;
@@ -112,17 +82,17 @@ void Player::DrawPlayer(const PlayerAnimation& playerAnim)
 		switch (this->currentPlayerState)
 		{
 		case IDLE:
-			Rectangle playerIdle = playerAnim.animationFrame(4);
+			Rectangle playerIdle = PlayerAnim.animationFrame(4);
 			playerIdle.width *= this->PlayerDirection;
 			DrawTexturePro(PlayerSkin[0], playerIdle, {playerpos.x,playerpos.y,48 * 2,48 * 2}, {0,0}, 0.0f, WHITE);
 			break;
 		case RUNNING:
-			Rectangle playerRun = playerAnim.animationFrame(6);
+			Rectangle playerRun = PlayerAnim.animationFrame(6);
 			playerRun.width *= this->PlayerDirection;
 			DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y,48 * 2,48 * 2}, {0,0}, 0.0f, WHITE);
 			break;
 		case JUMPING:
-			Rectangle playerJump = playerAnim.animationFrame(4);
+			Rectangle playerJump = PlayerAnim.animationFrame(4);
 			DrawTexturePro(PlayerSkin[2], playerJump, {playerpos.x,playerpos.y+offset,48 * 2,48 * 2 }, { 0,0 }, 0.0f, WHITE);
 			break;
 		case ATTACK:

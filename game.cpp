@@ -1,14 +1,17 @@
 #include "game.h"
 #include "terrain.h"
 #include "player.h"
+#include "animation.h"
 
 // Initial the global variables
 
 MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false) {}
 MainGame::~MainGame(){}
 
-PlayerAnimation playerAnim;
+//<- TODO: Add the player class and imply it ->//
+
 Player player;
+Animation PlayerAnim;
 
 
 // Draw the main menu
@@ -34,7 +37,7 @@ void MainGame::DrawPlaying()
 
 {
 	Terrain::DrawBackground();
-	player.DrawPlayer(playerAnim);
+	player.DrawPlayer(PlayerAnim);
 	
 
 }
@@ -51,7 +54,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 		isLoaded = true;
 	}
 	player.PlayerPositionUpdate(player.PlayerPosition);
-	playerAnim.PlayerAnimationUpdate(deltaTime);
+	PlayerAnim.AnimationUpdate(deltaTime);
 
 }
 
