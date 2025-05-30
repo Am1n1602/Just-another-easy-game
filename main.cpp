@@ -8,6 +8,7 @@ int main()
 
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
+	//ToggleBorderlessWindowed();
 
 
 	//SetExitKey(KEY_P); Uncomment in the final testing

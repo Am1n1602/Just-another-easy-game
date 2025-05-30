@@ -2,8 +2,8 @@
 
 #include <raylib.h>
 
-const int SCREENHEIGHT = 720;
-const int SCREENWIDTH = 1080;
+const int SCREENHEIGHT = 800;
+const int SCREENWIDTH = 1280;
 
 
 enum class GameState

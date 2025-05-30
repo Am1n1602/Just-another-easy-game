@@ -37,6 +37,7 @@ void MainGame::DrawPlaying()
 {
 	Terrain::DrawBackground();
 	player.DrawPlayer(PlayerAnim);
+
 }
 
 // Update the Playing area 
@@ -49,6 +50,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 	{
 		Terrain::LoadBackground(); // Load resources only once
 		Player::LoadPlayer();
+
 		isLoaded = true;
 	}
 	player.PlayerPositionUpdate(player.PlayerPosition);
