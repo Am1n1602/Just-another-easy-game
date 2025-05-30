@@ -26,6 +26,8 @@ private:
 	GameState currentState;
 	bool isLoaded;
 
+	Camera2D camera;
+
 	// Main-Menu objects
 	void DrawMenu();
 
@@ -43,8 +45,11 @@ public:
 	MainGame();
 	~MainGame();
 
+	void InitialCamera();
+
 	// Main Draw function
 	void Draw();
 	void Update(float deltaTime);
+	void UpdateCamera(float deltaTime);
 
 };

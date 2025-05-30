@@ -5,14 +5,30 @@
 
 // Initial the global variables
 
-MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false) {}
+MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false),
+camera(){}
 MainGame::~MainGame(){}
 
 //<- TODO: Add the player class and imply it ->//
+// <-Update 1: Partially done player class (idle,run,attack,jump) ->
+
+//<--TODO: Add camera class and Background scrolling>
 
 Player player;
 Animation PlayerAnim;
 
+Vector2 PlayerStartingPosition = player.PlayerPosition;
+
+
+void MainGame::InitialCamera()
+
+{
+	this->camera.offset = PlayerStartingPosition;
+	this->camera.target = player.PlayerPosition;
+	this->camera.rotation = 0.0f;
+	this->camera.zoom = 1.0f;
+
+}
 
 // Draw the main menu
 
@@ -32,11 +48,23 @@ void MainGame::DrawMenu()
 
 // Draw the Playing Arena
 
+
+void MainGame::UpdateCamera(float deltaTime)
+
+{
+	Vector2 velocity = player.PlayerVelocity;
+
+	camera.target = player.PlayerPosition;
+
+}
 void MainGame::DrawPlaying()
 
 {
+	InitialCamera();
+	BeginMode2D(camera);
 	Terrain::DrawBackground();
 	player.DrawPlayer(PlayerAnim);
+	EndMode2D();
 
 }
 
@@ -55,6 +83,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 	}
 	player.PlayerPositionUpdate(player.PlayerPosition);
 	PlayerAnim.AnimationUpdate(deltaTime);
+	UpdateCamera(deltaTime);
 
 
 	// if (IsKeyPressed(KEY_ESCAPE))

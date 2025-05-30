@@ -45,7 +45,7 @@ void Terrain::DrawBackground()
 
 	{
 
-		if (background[0].id != 0) {
+		if (background[0].id != 0 && i!=1) {
 
 			DrawTexturePro(background[i], {0,0,576,324}, {0, 0,SCREENWIDTH,SCREENHEIGHT}, {0,0}, 0.0f, WHITE);
 		}

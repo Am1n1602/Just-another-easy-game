@@ -26,15 +26,15 @@ int main()
 
 		float deltaTime = GetFrameTime();
 
+		game.Update(deltaTime);
 
 
 		// Drawing on screen
 		BeginDrawing();
 		ClearBackground(BLACK);
 
-		game.Update(deltaTime);
-
 		game.Draw();
+
 
 
 

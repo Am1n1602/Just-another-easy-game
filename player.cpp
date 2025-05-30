@@ -7,7 +7,7 @@
 // <-Add death switch case->
 // <-Add climb switch case (optional)>
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({30,600}),currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({500,600}),currentPlayerState(PlayerState::IDLE),
 jumpForce(-10.0f),isJumping(false),gravity(0.5f),verticalJumpVelocity(0.0f),Groundlevel(600){}
 
 Player::~Player(){}
@@ -151,6 +151,8 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 		default:
 			break;
 		}
+
+
 
 	}
 }
