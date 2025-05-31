@@ -35,6 +35,7 @@ void Terrain::LoadBackground()
 
 // Draw background every frame
 
+/* in draw texture use a for loop from -1 to 1. and in DEST rectangle do {i*Screenwidth,i*Screenheight,Screenwidth, Screenheight}. */
 
 
 
