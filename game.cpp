@@ -62,7 +62,7 @@ void MainGame::DrawPlaying()
 {
 	InitialCamera();
 	BeginMode2D(camera);
-	Terrain::DrawBackground();
+	Terrain::DrawBackground(player);
 	player.DrawPlayer(PlayerAnim);
 	EndMode2D();
 
@@ -84,6 +84,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 	player.PlayerPositionUpdate(player.PlayerPosition);
 	PlayerAnim.AnimationUpdate(deltaTime);
 	UpdateCamera(deltaTime);
+	
 
 
 	// if (IsKeyPressed(KEY_ESCAPE))

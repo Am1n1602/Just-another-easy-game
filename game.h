@@ -26,7 +26,6 @@ private:
 	GameState currentState;
 	bool isLoaded;
 
-	Camera2D camera;
 
 	// Main-Menu objects
 	void DrawMenu();
@@ -40,6 +39,7 @@ private:
 
 
 public:
+	Camera2D camera;
 
 	// Constructor and Destructor
 	MainGame();

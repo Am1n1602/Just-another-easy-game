@@ -1,4 +1,4 @@
-#include "terrain.h"
+﻿#include "terrain.h"
 #include "game.h"
 
 
@@ -35,20 +35,27 @@ void Terrain::LoadBackground()
 
 // Draw background every frame
 
-/* in draw texture use a for loop from -1 to 1. and in DEST rectangle do {i*Screenwidth,i*Screenheight,Screenwidth, Screenheight}. */
 
 
 
-void Terrain::DrawBackground()
+void Terrain::DrawBackground(Player player)
 
 {
+	int x = player.PlayerPosition.x / SCREENWIDTH;
 	for (int i = 0;i < 5;i++)
 
 	{
 
+
+
+
 		if (background[0].id != 0 && i!=1) {
 
-			DrawTexturePro(background[i], {0,0,576,324}, {0, 0,SCREENWIDTH,SCREENHEIGHT}, {0,0}, 0.0f, WHITE);
+			for (int j = -2 + x; j <= 2 + x;j++) {
+
+				DrawTexturePro(background[i], { 0,0,(float)background[i].width,(float)background[i].height}, {(float)j * SCREENWIDTH, 0,SCREENWIDTH,SCREENHEIGHT}, {0,0}, 0.0f, WHITE);
+		
+			}
 		}
 	}
 
