@@ -1,6 +1,9 @@
 #include "tilemap.h"
 #include <iostream>
-// TODO <-Need to draw the map, rendering and drawing is implement ->
+#include <utility>
+#include <vector>
+
+std::vector<std::pair<Vector2, Vector2>> Sauce;
 
 static Texture gameMap = { 0 };
 
@@ -24,11 +27,7 @@ void TileMap::MakeMap()
 		this->MapCoord += "02";
 	}
 	this->MapCoord += "03";
-}
-
-void TileMap::DrawMap()
-
-{
+	std::cout << "WWWW" << std::endl;
 	int size = this->MapCoord.size();
 
 	int whichTile1 = -1;
@@ -38,7 +37,8 @@ void TileMap::DrawMap()
 	int tileY = -1;
 	int desX = -1;
 	int desY = -1;
-
+	Vector2 tile = { 0 };
+	Vector2 des = { 0 };
 	for (int i = 0; i < (size)-1; i+=2)
 	{
 		if (this->MapCoord[i] == '0' && this->MapCoord[i + 1] == '0') {
@@ -53,14 +53,27 @@ void TileMap::DrawMap()
 
 			tileX = whichTile % 8;
 			tileY = whichTile / 8;
+			tile.x = tileX;
+			tile.y = tileY;
 
 			desX = (i / 2) % 40;
 			desY = (i / 2) / 40;
 
-
-			DrawTexturePro(gameMap, { (float)(tileX)*32,(float)(tileY)*32,32,32 }, { (float)desX * 32,(float)desY * 32,32,32 }, { 0,0 }, 0.0f, WHITE);
-
+			des.x = desX;
+			des.y = desY;
+			
+			Sauce.push_back(std::make_pair(tile, des));
 		}
+	}
+
+}
+
+void TileMap::DrawMap()
+
+{
+	for (int i = 0;i < Sauce.size();i++) {
+		DrawTexturePro(gameMap, { (float)(Sauce[i].first.x) * 32,(float)(Sauce[i].first.y) * 32,32,32}, {((float)Sauce[i].second.x) * 32,((float)Sauce[i].second.y) * 32,32,32}, {0,0}, 0.0f, WHITE);
+	
 	}
 }
 
