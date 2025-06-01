@@ -2,6 +2,7 @@
 #include "terrain.h"
 #include "player.h"
 #include "animation.h"
+#include "tilemap.h"
 
 // Initial the global variables
 
@@ -13,9 +14,11 @@ MainGame::~MainGame(){}
 // <-Update 1: Partially done player class (idle,run,attack,jump) ->
 
 //<--TODO: Add camera class and Background scrolling>
+// <-Update 2: both done->
 
 Player player;
 Animation PlayerAnim;
+TileMap GameMap;
 
 Vector2 PlayerStartingPosition = player.PlayerPosition;
 
@@ -63,6 +66,7 @@ void MainGame::DrawPlaying()
 	InitialCamera();
 	BeginMode2D(camera);
 	Terrain::DrawBackground(player);
+	GameMap.DrawMap();
 	player.DrawPlayer(PlayerAnim);
 	EndMode2D();
 
@@ -77,7 +81,9 @@ void MainGame::UpdatePlaying(float deltaTime)
 
 	{
 		Terrain::LoadBackground(); // Load resources only once
+		TileMap::LoadMap();
 		Player::LoadPlayer();
+		GameMap.MakeMap();
 
 		isLoaded = true;
 	}
