@@ -2,7 +2,6 @@
 #include "game.h"
 
 
-
 // give ID to initial background as 0
 static Texture background[5] = {0};
 
@@ -45,9 +44,6 @@ void Terrain::DrawBackground(Player player)
 	for (int i = 0;i < 5;i++)
 
 	{
-
-
-
 
 		if (background[0].id != 0 && i!=1) {
 

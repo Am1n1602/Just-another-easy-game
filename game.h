@@ -2,9 +2,9 @@
 
 #include <raylib.h>
 
+
 const int SCREENHEIGHT = 800;
 const int SCREENWIDTH = 1280;
-
 
 enum class GameState
 
@@ -13,40 +13,30 @@ enum class GameState
 	PLAYING,
 	PAUSE,
 	GAMEOVER
+
 };
-
-
-
 
 class MainGame
 
 {
+
 private: 
 
 	GameState currentState;
 	bool isLoaded;
-
-
 	// Main-Menu objects
 	void DrawMenu();
-
-
 	void DrawPlaying();
-
 	void UpdateMenu(float deltaTime);
-
 	void UpdatePlaying(float deltaTime);
 
-
 public:
-	Camera2D camera;
 
+	Camera2D camera;
 	// Constructor and Destructor
 	MainGame();
 	~MainGame();
-
 	void InitialCamera();
-
 	// Main Draw function
 	void Draw();
 	void Update(float deltaTime);

@@ -16,6 +16,8 @@ MainGame::~MainGame(){}
 //<--TODO: Add camera class and Background scrolling>
 // <-Update 2: both done->
 
+
+
 Player player;
 Animation PlayerAnim;
 TileMap GameMap;
