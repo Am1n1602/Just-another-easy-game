@@ -1,9 +1,10 @@
 #include "tilemap.h"
+#include <iostream>
 
 
-// Wtf is sauce (iykyk ;) )
-std::vector<std::pair<Vector2, Vector2>> Sauce;
 static Texture gameMap = { 0 };
+
+std::vector<std::pair<Vector2, Vector2>> MapGrid;
 
 TileMap::TileMap() : MapCoord("") {}
 TileMap::~TileMap() {}
@@ -22,14 +23,47 @@ void TileMap::MakeMap()
 
 // TODO <-Make the actual map and try to optimise it->
 {
+
+	for (int i = 0;i < 22;i++) {
+		for (int j = 0;j < 40;j++) {
+			this->MapCoord += "00";
+		}
+	}
+
 	this->MapCoord += "01";
 	for (int i = 0; i < 38;i++)
 	
 	{
-		this->MapCoord += "02";
+		if (i != 30) {
+			this->MapCoord += "02";
+		}
+		else {
+			this->MapCoord += "00";
+		}
 	}
 
-	this->MapCoord += "03";
+	for (int i = 0;i < 64;i++) {
+		for (int j = 0;j < 40;j++) {
+			this->MapCoord += "00";
+		}
+	}
+
+
+
+	this->MapCoord += "01";
+	for (int i = 0; i < 38;i++)
+
+	{
+		if (i != 30) {
+			this->MapCoord += "02";
+		}
+		else {
+			this->MapCoord += "00";
+		}
+	}
+
+
+	this->MapCoord += "63";
 	int size = this->MapCoord.size();
 	int whichTile1 = -1;
 	int whichTile2 = -1;
@@ -41,6 +75,7 @@ void TileMap::MakeMap()
 	Vector2 tile = { 0 };
 	Vector2 des = { 0 };
 
+	std::cout << size << std::endl;
 	for (int i = 0; i < (size)-1; i+=2)
 
 	{
@@ -59,15 +94,17 @@ void TileMap::MakeMap()
 
 			tileX = whichTile % 8;
 			tileY = whichTile / 8;
-			desX = (i / 2) % 40;
-			desY = (i / 2) / 40;
+			desX = ((i / 2) % 40) + (40*(i/2000));
+			desY = ((i / 2) / 40) - (25*(i/2000));
+
+			std::cout << i/2 << " " << desX << " " << std::endl;
 
 			tile.x = tileX;
 			tile.y = tileY;
 			des.x = desX;
 			des.y = desY;
 			
-			Sauce.push_back(std::make_pair(tile, des));
+			MapGrid.push_back(std::make_pair(tile, des));
 		}
 	}
 
@@ -76,10 +113,11 @@ void TileMap::MakeMap()
 void TileMap::DrawMap()
 
 {
-	for (int i = 0;i < Sauce.size();i++)
+	for (int i = 0;i < MapGrid.size();i++)
 	
 	{
-		DrawTexturePro(gameMap, { (float)(Sauce[i].first.x) * 32,(float)(Sauce[i].first.y) * 32,32,32}, {((float)Sauce[i].second.x) * 32,((float)Sauce[i].second.y) * 32,32,32}, {0,0}, 0.0f, WHITE);
+		DrawTexturePro(gameMap, { (float)(MapGrid[i].first.x) * 32,(float)(MapGrid[i].first.y) * 32,32,32}, {((float)MapGrid[i].second.x) * 32,((float)MapGrid[i].second.y) * 32,32,32}, {0,0}, 0.0f, WHITE);
+	
 	}
 }
 

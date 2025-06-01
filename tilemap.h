@@ -5,13 +5,13 @@
 #include <utility>
 #include <vector>
 
+extern std::vector<std::pair<Vector2, Vector2>> MapGrid;
 
 class TileMap
 
 {
 
 private:
-
 	std::string MapCoord;
 
 public:

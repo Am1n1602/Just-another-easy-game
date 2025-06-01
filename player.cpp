@@ -1,21 +1,24 @@
 #include "player.h"
 #include "game.h"
 #include "animation.h"
-
+#include "tilemap.h"
 
 // TODO <-Need to use variable in playerVelocity and playerPosition->
 // <-Add death switch case->
 // <-Add climb switch case (optional)>
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({500,600}),currentPlayerState(PlayerState::IDLE),
-jumpForce(-10.0f),isJumping(false),gravity(0.5f),verticalJumpVelocity(0.0f),Groundlevel(600){}
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({500,608}),currentPlayerState(PlayerState::IDLE),
+jumpForce(-10.0f),isJumping(false),gravity(0.5f),verticalJumpVelocity(0.0f),Groundlevel(608){}
 
 Player::~Player(){}
 Animation Anim;
 
+
+
 void Player::PlayerPositionUpdate(Vector2 PlayerPosition)  
 
 {
+
 	bool moving = false;
 
    if (IsKeyDown(KEY_D))  
@@ -39,6 +42,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
    if (IsKeyPressed(KEY_SPACE) && !isJumping)
 
    {
+	   this->Groundlevel = PlayerPosition.y;
 	   isJumping = true;
 	   verticalJumpVelocity = jumpForce;
 	   this->currentPlayerState = PlayerState::JUMPING;
@@ -53,6 +57,8 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 	   this->PlayerPosition.y += verticalJumpVelocity;
 
 	   // <-TODO: Making this groundLevel game variable ->
+	   // Done
+
 
 	   if (this->PlayerPosition.y >= Groundlevel)
 
