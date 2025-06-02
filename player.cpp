@@ -1,13 +1,13 @@
-#include "player.h"
+﻿#include "player.h"
 #include "game.h"
 #include "animation.h"
 #include "tilemap.h"
-
+#include <iostream>
 // TODO <-Need to use variable in playerVelocity and playerPosition->
 // <-Add death switch case->
 // <-Add climb switch case (optional)>
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({500,608}),currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({512,588}),currentPlayerState(PlayerState::IDLE),
 jumpForce(-10.0f),isJumping(false),gravity(0.5f),verticalJumpVelocity(0.0f),Groundlevel(608){}
 
 Player::~Player(){}
@@ -15,79 +15,160 @@ Animation Anim;
 
 
 
-void Player::PlayerPositionUpdate(Vector2 PlayerPosition)  
-
+void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 {
+    const float playerWidth = 32.0f;
+    const float playerHeight = 96.0f;
 
-	bool moving = false;
+    bool moving = false;
+    float dx = 0.0f;
+    float dy = 0.0f;
 
-   if (IsKeyDown(KEY_D))  
+   
+    if (IsKeyDown(KEY_D))
+    {
+        this->currentPlayerState = PlayerState::RUNNING;
+        this->PlayerDirection = Direction::RIGHT;
+        dx = this->PlayerVelocity.x;
+        moving = true;
+    }
+    else if (IsKeyDown(KEY_A))
+    {
+        this->currentPlayerState = PlayerState::RUNNING;
+        this->PlayerDirection = Direction::LEFT;
+        dx = -this->PlayerVelocity.x;
+        moving = true;
+    }
 
-   {  
-	   this->currentPlayerState = PlayerState::RUNNING;
-       this->PlayerDirection = Direction::RIGHT; 
-	   this->PlayerPosition.x += this->PlayerVelocity.x;
-	   moving = true;
-   }  
-   if (IsKeyDown(KEY_A))
+  
+    if (dx != 0.0f)
+    {
+        Rectangle futureH = {
+            this->PlayerPosition.x + dx,
+            this->PlayerPosition.y,
+            playerWidth,
+            playerHeight
+        };
 
-   {
-	   this->currentPlayerState = PlayerState::RUNNING;
-	   this->PlayerDirection = Direction::LEFT;
-	   this->PlayerPosition.x -= this->PlayerVelocity.x;
-	   moving = true;
-   }
+        bool hitH = false;
+        for (int i = 0; i < (int)GridCollisionCoord.size(); i++)
+        {
+            if (CheckCollisionRecs(futureH, GridCollisionCoord[i]))
+            {
+                hitH = true;
+                break;
+            }
+        }
 
+        if (!hitH)
+        {
+            this->PlayerPosition.x += dx;
+        }
+    }
 
-   if (IsKeyPressed(KEY_SPACE) && !isJumping)
+   
+    Rectangle feetRect = {
+        this->PlayerPosition.x,
+        this->PlayerPosition.y + playerHeight,  
+        playerWidth,
+        2.0f                                  
+    };
 
-   {
-	   this->Groundlevel = PlayerPosition.y;
-	   isJumping = true;
-	   verticalJumpVelocity = jumpForce;
-	   this->currentPlayerState = PlayerState::JUMPING;
-	   
-	   
-   }
+    bool onGround = false;
+    for (int i = 0; i < (int)GridCollisionCoord.size(); i++)
+    {
+        if (CheckCollisionRecs(feetRect, GridCollisionCoord[i]))
+        {
+            onGround = true;
+            break;
+        }
+    }
 
-   if (isJumping)
+  
+    if (!onGround && !isJumping)
+    {
+        isJumping = true;
+        verticalJumpVelocity = 0.0f;        // start falling straight down
+        this->currentPlayerState = PlayerState::JUMPING;
+    }
 
-   {
-	   verticalJumpVelocity += gravity;
-	   this->PlayerPosition.y += verticalJumpVelocity;
+    
+    if (IsKeyPressed(KEY_SPACE) && !isJumping) // can be onGround (Need to look into it)
+    {
+        isJumping = true;
+        verticalJumpVelocity = jumpForce;   // (negative if jumpForce < 0)
+        this->currentPlayerState = PlayerState::JUMPING;
+    }
 
-	   // <-TODO: Making this groundLevel game variable ->
-	   // Done
+  
+    if (isJumping)
+    {
 
+        verticalJumpVelocity += gravity;
+        dy = verticalJumpVelocity;
+    }
 
-	   if (this->PlayerPosition.y >= Groundlevel)
+    if (dy != 0.0f)
+    {
+        
+        Rectangle futureV = {
+            this->PlayerPosition.x,
+            this->PlayerPosition.y + dy,
+            playerWidth,
+            playerHeight
+        };
 
-	   {
-		   this->PlayerPosition.y >= Groundlevel;
-		   isJumping = false;
-		   verticalJumpVelocity = 0;
-		   currentPlayerState = moving ? PlayerState::RUNNING : PlayerState::IDLE;
-	   }
-   }
+        bool hitV = false;
+        for (int i = 0; i < (int)GridCollisionCoord.size(); i++)
+        {
+            Rectangle tileRect = GridCollisionCoord[i];
+            if (CheckCollisionRecs(futureV, tileRect))
+            {
+                hitV = true;
 
-   if (IsKeyPressed(KEY_Q))
+                if (dy > 0.0f)
+                {
+                    
+                    this->PlayerPosition.y = tileRect.y - playerHeight;
+                    isJumping = false;
+                    verticalJumpVelocity = 0.0f;
+                    this->currentPlayerState = moving ? PlayerState::RUNNING
+                        : PlayerState::IDLE;
+                }
+                else 
+                {
+                    this->PlayerPosition.y = tileRect.y + tileRect.height;
+                    verticalJumpVelocity = 0.0f;
+                    
+                }
+                break;
+            }
+        }
 
-   {
-	   this->currentPlayerState = PlayerState::ATTACK;
-   }
+        if (!hitV)
+        {
+    
+            this->PlayerPosition.y += dy;
+        }
+    }
 
-   if (currentPlayerState == PlayerState::ATTACK && Anim.isFinished())
+ 
+    if (IsKeyPressed(KEY_Q))
+    {
+        this->currentPlayerState = PlayerState::ATTACK;
+    }
 
-   {
-	   currentPlayerState = PlayerState::IDLE;
-   }
+    if (this->currentPlayerState == PlayerState::ATTACK && Anim.isFinished())
+    {
+        this->currentPlayerState = PlayerState::IDLE;
+    }
 
-   if (!moving && this->currentPlayerState != PlayerState::JUMPING
-	   && this->currentPlayerState != PlayerState::ATTACK)
-
-   {
-	   this->currentPlayerState = PlayerState::IDLE;
-   }
+    if (!moving
+        && !isJumping
+        && this->currentPlayerState != PlayerState::ATTACK)
+    {
+        this->currentPlayerState = PlayerState::IDLE;
+    }
 }
 
 
@@ -131,26 +212,26 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 		Vector2 playerpos = this->PlayerPosition;
 		switch (this->currentPlayerState)
 		{
-
+            // the size of the player is something which is giving problem
 		case IDLE:
 			Rectangle playerIdle = PlayerAnim.animationFrame(4,AnimationType::REPEATING);
 			playerIdle.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[0], playerIdle, {playerpos.x,playerpos.y,48 * 2,48 * 2}, {0,0}, 0.0f, WHITE);
+			DrawTexturePro(PlayerSkin[0], playerIdle, {playerpos.x,playerpos.y,64 ,96 }, {0,0}, 0.0f, WHITE);
 			break;
 		case RUNNING:
 			Rectangle playerRun = PlayerAnim.animationFrame(6, AnimationType::REPEATING);
 			playerRun.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y,48 * 2,48 * 2}, {0,0}, 0.0f, WHITE);
+			DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y,64 ,96 }, {0,0}, 0.0f, WHITE);
 			break;
 		case JUMPING:
 			Rectangle playerJump = PlayerAnim.animationFrame(4, AnimationType::ONESHOT);
 			playerJump.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[2], playerJump, {playerpos.x,playerpos.y,48 * 2,48 * 2 }, { 0,0 }, 0.0f, WHITE);
+			DrawTexturePro(PlayerSkin[2], playerJump, {playerpos.x,playerpos.y,64 ,96  }, { 0,0 }, 0.0f, WHITE);
 			break;
 		case ATTACK:
 			Rectangle playerAttack = PlayerAnim.animationFrame(8, AnimationType::ONESHOT);
 			playerAttack.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[3],playerAttack, { playerpos.x,playerpos.y,48 * 2,48 * 2 }, { 0,0 }, 0.0f, WHITE);
+			DrawTexturePro(PlayerSkin[3],playerAttack, { playerpos.x,playerpos.y,64 ,96  }, { 0,0 }, 0.0f, WHITE);
 			break;
 		case DEAD:
 			break;

@@ -4,9 +4,9 @@
 
 static Texture gameMap = { 0 };
 
-std::vector<std::pair<Vector2, Vector2>> MapGrid;
+std::vector<Rectangle> GridCollisionCoord;
 
-TileMap::TileMap() : MapCoord("") {}
+TileMap::TileMap() : MapCoord(""),MapGrid() {}
 TileMap::~TileMap() {}
 
 void TileMap::LoadMap()
@@ -24,8 +24,16 @@ void TileMap::MakeMap()
 // TODO <-Make the actual map and try to optimise it->
 {
 
-	for (int i = 0;i < 22;i++) {
+	for (int i = 0;i < 21;i++) {
 		for (int j = 0;j < 40;j++) {
+			this->MapCoord += "00";
+		}
+	}
+	for (int j = 0;j < 40;j++) {
+		if (j > 21) {
+			this->MapCoord += "01";
+		}
+		else {
 			this->MapCoord += "00";
 		}
 	}
@@ -34,7 +42,7 @@ void TileMap::MakeMap()
 	for (int i = 0; i < 38;i++)
 	
 	{
-		if (i != 30) {
+		if (i != 30 &&  i!=31) {
 			this->MapCoord += "02";
 		}
 		else {
@@ -42,7 +50,7 @@ void TileMap::MakeMap()
 		}
 	}
 
-	for (int i = 0;i < 64;i++) {
+	for (int i = 0;i < 24;i++) {
 		for (int j = 0;j < 40;j++) {
 			this->MapCoord += "00";
 		}
@@ -54,7 +62,7 @@ void TileMap::MakeMap()
 	for (int i = 0; i < 38;i++)
 
 	{
-		if (i != 30) {
+		if (i != 30 && i!=31) {
 			this->MapCoord += "02";
 		}
 		else {
@@ -75,7 +83,6 @@ void TileMap::MakeMap()
 	Vector2 tile = { 0 };
 	Vector2 des = { 0 };
 
-	std::cout << size << std::endl;
 	for (int i = 0; i < (size)-1; i+=2)
 
 	{
@@ -97,7 +104,6 @@ void TileMap::MakeMap()
 			desX = ((i / 2) % 40) + (40*(i/2000));
 			desY = ((i / 2) / 40) - (25*(i/2000));
 
-			std::cout << i/2 << " " << desX << " " << std::endl;
 
 			tile.x = tileX;
 			tile.y = tileY;
@@ -105,6 +111,10 @@ void TileMap::MakeMap()
 			des.y = desY;
 			
 			MapGrid.push_back(std::make_pair(tile, des));
+
+			Rectangle x = { desX * 32, desY * 32, 32, 32 };
+			//std::cout << x.x << " "<< x.y << " ";
+			GridCollisionCoord.push_back(x);
 		}
 	}
 

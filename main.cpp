@@ -10,7 +10,7 @@ int main()
 	// Initialization 
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
-	//ToggleBorderlessWindowed();
+	//ToggleFullscreen();
 	//SetExitKey(KEY_P); Uncomment in the final testing
 	// Initialise the game
 	MainGame game;

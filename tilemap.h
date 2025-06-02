@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-extern std::vector<std::pair<Vector2, Vector2>> MapGrid;
+extern std::vector <Rectangle> GridCollisionCoord;
 
 class TileMap
 
@@ -13,6 +13,7 @@ class TileMap
 
 private:
 	std::string MapCoord;
+	std::vector<std::pair<Vector2, Vector2>> MapGrid;
 
 public:
 
