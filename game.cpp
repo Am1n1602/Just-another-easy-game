@@ -150,3 +150,10 @@ void MainGame::Draw()
 }
 
 
+void MainGame::Unload()
+
+{
+	Terrain::UnloadBackground();
+	GameMap.UnloadMap();
+	player.UnloadPlayer();
+}

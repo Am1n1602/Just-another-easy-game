@@ -242,3 +242,12 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 	}
 }
+
+void Player::UnloadPlayer()
+
+{
+    for (int i = 0; i < 4; i++)
+    {
+        UnloadTexture(PlayerSkin[i]);
+    }
+}

@@ -42,4 +42,6 @@ public:
 	void Update(float deltaTime);
 	void UpdateCamera(float deltaTime);
 
+	void Unload();
+
 };

@@ -27,7 +27,7 @@ public:
 	TileMap();
 	~TileMap();
 	 void LoadMap();
-	/*void MakeMap();*/
 	void DrawMap();
+	void UnloadMap();
 	
 };

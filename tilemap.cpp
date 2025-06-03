@@ -182,7 +182,7 @@ void TileMap::LoadMap()
 //		}
 //	}
 //
-//}
+//} // Will remove later
 
 void TileMap::DrawMap()
 
@@ -195,3 +195,8 @@ void TileMap::DrawMap()
 	}
 }
 
+void TileMap::UnloadMap()
+
+{
+	UnloadTexture(gameMap);
+}

@@ -47,4 +47,5 @@ public:
 	static void LoadPlayer();
 	void DrawPlayer(Animation& PlayerAnim);
 
+	static void UnloadPlayer();
 };

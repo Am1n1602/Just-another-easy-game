@@ -30,6 +30,8 @@ int main()
 	}
 
 	// De-Initialization
+
+	game.Unload();
 	CloseWindow();
 
 	return 0;
