@@ -1,9 +1,15 @@
 #pragma once
 
+
 #include <raylib.h>
 #include <string>
 #include <utility>
 #include <vector>
+#include <iostream>
+#include <fstream>
+
+
+
 
 extern std::vector <Rectangle> GridCollisionCoord;
 
@@ -12,15 +18,16 @@ class TileMap
 {
 
 private:
-	std::string MapCoord;
-	std::vector<std::pair<Vector2, Vector2>> MapGrid;
+	
+	std::vector<std::pair<Rectangle, Rectangle>> MapGrid;
+	
 
 public:
 
 	TileMap();
 	~TileMap();
-	static void LoadMap();
-	void MakeMap();
+	 void LoadMap();
+	/*void MakeMap();*/
 	void DrawMap();
 	
 };

@@ -83,8 +83,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 
 	{
 		Terrain::LoadBackground(); // Load resources only once
-		TileMap::LoadMap();
-		GameMap.MakeMap();
+		GameMap.LoadMap();
 		Player::LoadPlayer();
 
 		isLoaded = true;

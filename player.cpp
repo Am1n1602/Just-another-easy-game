@@ -7,12 +7,11 @@
 // <-Add death switch case->
 // <-Add climb switch case (optional)>
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({512,588}),currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({128,588}),currentPlayerState(PlayerState::IDLE),
 jumpForce(-10.0f),isJumping(false),gravity(0.5f),verticalJumpVelocity(0.0f),Groundlevel(608){}
 
 Player::~Player(){}
 Animation Anim;
-
 
 
 void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
