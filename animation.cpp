@@ -13,6 +13,9 @@ int GlobalFrame = 0;
 Rectangle Animation::animationFrame(int numberFrameperRow, AnimationType AnimationType)
 
 {
+
+	// Need to replace 48 with player width
+
 	GlobalFrame = numberFrameperRow;
 	this->currentAnimationType = AnimationType;
 	int x = (currentFrame % numberFrameperRow) * 48;

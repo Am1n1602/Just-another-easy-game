@@ -5,7 +5,9 @@
 static Texture gameMap = { 0 };
 
 std::vector<Rectangle> GridCollisionCoord;
-
+std::vector<Rectangle> ObjectCollisionCoord;
+std::deque <Rectangle> SavePointQueue;
+Vector2 SourceForSave;
 TileMap::TileMap() : MapGrid() {}
 TileMap::~TileMap() {}
 
@@ -42,10 +44,10 @@ void TileMap::LoadMap()
 	if (gameMap.id == 0)
 	
 	{
-		gameMap = LoadTexture("assets/Tileset.png");
+		gameMap = LoadTexture("assets/tile21.png");
 	}
 
-	auto buffer = load_file("assets/untitled.json");
+	auto buffer = load_file("assets/TileMap1.json");
 
 	if (!buffer.empty()) {
 
@@ -72,10 +74,51 @@ void TileMap::LoadMap()
 					int sy = (local_id / tileset_columns) * tile_height;
 
 					Rectangle src = { (float)sx, (float)sy, (float)tile_width, (float)tile_height };
-					Rectangle dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+
+					Rectangle dest = {};
+					Rectangle dest1 = {};
+
+					if(gid==51) {
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						 dest1 = { (float)(x * tile_width)+tile_width/2, (float)(y * tile_height)+1, (float)tile_width/2, (float)tile_height-1 };
+						 ObjectCollisionCoord.push_back(dest1);
+					}
+					else if (gid == 52) {
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width)+1, (float)(y * tile_height), (float)tile_width, (float)tile_height/2 };
+						ObjectCollisionCoord.push_back(dest1);
+					}
+					else if (gid == 39) {
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width)+1, (float)(y * tile_height)+tile_height/2, (float)tile_width-2, (float)tile_height / 2 };
+						ObjectCollisionCoord.push_back(dest1);
+					}
+					else if (gid == 60) {
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width)+1, (float)(y * tile_height), (float)tile_width-2, (float)tile_height };
+						ObjectCollisionCoord.push_back(dest1);
+					}
+					else if (gid == 50) {
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width/2, (float)tile_height };
+						ObjectCollisionCoord.push_back(dest1);
+					}
+
+					else if (gid == 16) {
+						Rectangle dester = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						SavePointQueue.push_back(dester);
+						SourceForSave.x = src.x;
+						SourceForSave.y = src.y;
+					}
+
+					else {
+						 dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						 dest1 = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+					}
+					
 					/*DrawTextureRec(tileset_texture, src, { dest.x, dest.y }, WHITE);*/ // will remove later
 					this->MapGrid.push_back(std::make_pair(src, dest));
-					GridCollisionCoord.push_back(dest);
+					GridCollisionCoord.push_back(dest1);
 				}
 			}
 		}
@@ -192,6 +235,19 @@ void TileMap::DrawMap()
 	{
 		DrawTexturePro(gameMap,MapGrid[i].first,MapGrid[i].second, {0,0}, 0.0f, WHITE);
 	
+	}
+
+	/*for (int i = 0;i < GridCollisionCoord.size();i++) {
+		DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, RED);
+	}*/
+
+}
+
+void TileMap::DrawObjects()
+
+{
+	for (int i = 0;i < SavePointQueue.size();i++) {
+		DrawTexturePro(gameMap, { SourceForSave.x,SourceForSave.y,16,16 }, SavePointQueue[i], { 0,0 }, 0.0f, WHITE);
 	}
 }
 

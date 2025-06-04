@@ -32,7 +32,7 @@ private:
 	const float jumpForce;
 	const float gravity;
 	float verticalJumpVelocity;
-	float Groundlevel;
+	Vector2 Groundlevel;
 
 public:
 

@@ -7,31 +7,44 @@
 // <-Add death switch case->
 // <-Add climb switch case (optional)>
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 5,5 }), PlayerPosition({128,588}),currentPlayerState(PlayerState::IDLE),
-jumpForce(-10.0f),isJumping(false),gravity(0.5f),verticalJumpVelocity(0.0f),Groundlevel(608){}
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.2,2 }), PlayerPosition({16,272}),currentPlayerState(PlayerState::IDLE),
+jumpForce(-5.4f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 16,272 }) {
+}
 
 Player::~Player(){}
 Animation Anim;
 
+     float playerWidth = 14.0f;
+     float playerHeight = 15.0f;
 
-void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
-{
-    const float playerWidth = 32.0f;
-    const float playerHeight = 96.0f;
+     void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
+     {
 
-    bool moving = false;
-    float dx = 0.0f;
-    float dy = 0.0f;
+         bool moving = false;
+         float dx = 0.0f;
+         float dy = 0.0f;
+
+
+         for (auto it = SavePointQueue.begin(); it != SavePointQueue.end(); ++it) {
+             if (CheckCollisionRecs({ this->PlayerPosition.x, this->PlayerPosition.y, playerWidth, playerHeight }, *it)) {
+                 Groundlevel.x = it->x;
+                 Groundlevel.y = it->y;
+                 SavePointQueue.erase(it); // Remove the collided save point
+                 break; // Important: break after erase to avoid iterator issues
+             }
+         }
+
+
 
    
-    if (IsKeyDown(KEY_D))
+    if (IsKeyDown(KEY_D) && this->currentPlayerState!=PlayerState::DEAD)
     {
         this->currentPlayerState = PlayerState::RUNNING;
         this->PlayerDirection = Direction::RIGHT;
         dx = this->PlayerVelocity.x;
         moving = true;
     }
-    else if (IsKeyDown(KEY_A))
+    else if (IsKeyDown(KEY_A) && this->currentPlayerState != PlayerState::DEAD)
     {
         this->currentPlayerState = PlayerState::RUNNING;
         this->PlayerDirection = Direction::LEFT;
@@ -39,11 +52,12 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
         moving = true;
     }
 
+
   
     if (dx != 0.0f)
     {
         Rectangle futureH = {
-            this->PlayerPosition.x + dx,
+            this->PlayerPosition.x + dx ,
             this->PlayerPosition.y,
             playerWidth,
             playerHeight
@@ -55,6 +69,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
             if (CheckCollisionRecs(futureH, GridCollisionCoord[i]))
             {
                 hitH = true;
+
                 break;
             }
         }
@@ -92,14 +107,15 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
     }
 
     
-    if (IsKeyPressed(KEY_SPACE) && !isJumping) // can be onGround (Need to look into it)
+    if (IsKeyPressed(KEY_SPACE) && !isJumping && this->currentPlayerState != PlayerState::DEAD) // can be onGround (Need to look into it)
     {
         isJumping = true;
         verticalJumpVelocity = jumpForce;   // (negative if jumpForce < 0)
         this->currentPlayerState = PlayerState::JUMPING;
     }
 
-  
+
+
     if (isJumping)
     {
 
@@ -152,7 +168,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
     }
 
  
-    if (IsKeyPressed(KEY_Q))
+    if (IsKeyPressed(KEY_Q) && this->currentPlayerState != PlayerState::DEAD)
     {
         this->currentPlayerState = PlayerState::ATTACK;
     }
@@ -164,14 +180,35 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 
     if (!moving
         && !isJumping
-        && this->currentPlayerState != PlayerState::ATTACK)
+        && this->currentPlayerState != PlayerState::ATTACK && this->currentPlayerState != PlayerState::DEAD)
     {
+        this->currentPlayerState = PlayerState::IDLE;
+    }
+    for (int i = 0;i < ObjectCollisionCoord.size();i++) {
+        if (CheckCollisionRecs({ PlayerPosition.x, PlayerPosition.y, playerWidth+1, playerHeight+1 }, ObjectCollisionCoord[i])) {
+            this->currentPlayerState = PlayerState::DEAD;
+            break;
+        }
+    }
+
+    if (this->currentPlayerState == PlayerState::DEAD && Anim.isFinished())
+    {
+            this->PlayerPosition.x = Groundlevel.x; 
+            this->PlayerPosition.y = Groundlevel.y;
+            this->PlayerDirection = Direction::RIGHT;
+            this->currentPlayerState = PlayerState::IDLE;
+    }
+
+    if (this->PlayerPosition.y >= 1000) {
+        this->PlayerPosition.x = Groundlevel.x; 
+        this->PlayerPosition.y = Groundlevel.y;
+        this->PlayerDirection = Direction::RIGHT;
         this->currentPlayerState = PlayerState::IDLE;
     }
 }
 
 
-static Texture PlayerSkin[4] = {0};
+static Texture PlayerSkin[5] = {0};
 
 void Player::LoadPlayer()
 
@@ -199,6 +236,9 @@ void Player::LoadPlayer()
 	{
 		PlayerSkin[3] = LoadTexture("assets/Biker_attack2.png");
 	}
+    if (PlayerSkin[4].id == 0) {
+        PlayerSkin[4] = LoadTexture("assets/Biker_death.png");
+    }
 }
 
 void Player::DrawPlayer(Animation& PlayerAnim)
@@ -209,30 +249,62 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 	{
 		Vector2 playerpos = this->PlayerPosition;
-		switch (this->currentPlayerState)
-		{
+        switch (this->currentPlayerState)
+        {
             // the size of the player is something which is giving problem
-		case IDLE:
-			Rectangle playerIdle = PlayerAnim.animationFrame(4,AnimationType::REPEATING);
-			playerIdle.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[0], playerIdle, {playerpos.x,playerpos.y,64 ,96 }, {0,0}, 0.0f, WHITE);
+        case IDLE:
+            Rectangle playerIdle = PlayerAnim.animationFrame(4, AnimationType::REPEATING);
+            playerIdle.width *= this->PlayerDirection;
+            if (PlayerDirection == Direction::LEFT) {
+                DrawTexturePro(PlayerSkin[0], playerIdle, { playerpos.x-8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+            else {
+                DrawTexturePro(PlayerSkin[0], playerIdle, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+           // DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
 			break;
 		case RUNNING:
 			Rectangle playerRun = PlayerAnim.animationFrame(6, AnimationType::REPEATING);
 			playerRun.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y,64 ,96 }, {0,0}, 0.0f, WHITE);
+            if (PlayerDirection == Direction::LEFT) {
+                DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+            else {
+                DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+           // DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
 			break;
 		case JUMPING:
 			Rectangle playerJump = PlayerAnim.animationFrame(4, AnimationType::ONESHOT);
 			playerJump.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[2], playerJump, {playerpos.x,playerpos.y,64 ,96  }, { 0,0 }, 0.0f, WHITE);
+            if (PlayerDirection == Direction::LEFT) {
+                DrawTexturePro(PlayerSkin[2], playerJump, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+            else {
+                DrawTexturePro(PlayerSkin[2], playerJump, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+           // DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
 			break;
 		case ATTACK:
 			Rectangle playerAttack = PlayerAnim.animationFrame(8, AnimationType::ONESHOT);
 			playerAttack.width *= this->PlayerDirection;
-			DrawTexturePro(PlayerSkin[3],playerAttack, { playerpos.x,playerpos.y,64 ,96  }, { 0,0 }, 0.0f, WHITE);
+            if (PlayerDirection == Direction::LEFT) {
+                DrawTexturePro(PlayerSkin[3], playerAttack, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+            else {
+                DrawTexturePro(PlayerSkin[3], playerAttack, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+           // DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
 			break;
 		case DEAD:
+            Rectangle playerDead = PlayerAnim.animationFrame(6, AnimationType::ONESHOT);
+            if (PlayerDirection == Direction::LEFT) {
+                DrawTexturePro(PlayerSkin[4], playerDead, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+            else {
+                DrawTexturePro(PlayerSkin[4], playerDead, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+            }
+         //   DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
 			break;
 		default:
 			break;
@@ -246,7 +318,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 void Player::UnloadPlayer()
 
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         UnloadTexture(PlayerSkin[i]);
     }

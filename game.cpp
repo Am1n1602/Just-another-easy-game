@@ -28,10 +28,11 @@ Vector2 PlayerStartingPosition = player.PlayerPosition;
 void MainGame::InitialCamera()
 
 {
-	this->camera.offset = PlayerStartingPosition;
+	this->camera.offset.x = PlayerStartingPosition.x + SCREENWIDTH / 4;
+	this->camera.offset.y = PlayerStartingPosition.y + 0.1*SCREENHEIGHT;
 	this->camera.target = player.PlayerPosition;
 	this->camera.rotation = 0.0f;
-	this->camera.zoom = 1.0f;
+	this->camera.zoom = 3.2f;
 
 }
 
@@ -70,6 +71,7 @@ void MainGame::DrawPlaying()
 	Terrain::DrawBackground(player);
 	GameMap.DrawMap();
 	player.DrawPlayer(PlayerAnim);
+	GameMap.DrawObjects();
 	EndMode2D();
 
 }
@@ -91,6 +93,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 	player.PlayerPositionUpdate(player.PlayerPosition);
 	PlayerAnim.AnimationUpdate(deltaTime);
 	UpdateCamera(deltaTime);
+
 	
 
 

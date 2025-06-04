@@ -7,11 +7,13 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-
-
+#include <deque>
+#include <algorithm>
 
 
 extern std::vector <Rectangle> GridCollisionCoord;
+extern std::vector <Rectangle> ObjectCollisionCoord;
+extern std::deque <Rectangle> SavePointQueue;
 
 class TileMap
 
@@ -29,5 +31,6 @@ public:
 	 void LoadMap();
 	void DrawMap();
 	void UnloadMap();
+	void DrawObjects();
 	
 };
