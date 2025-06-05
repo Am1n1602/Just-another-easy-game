@@ -9,8 +9,8 @@
 
 // Need to work on velocity calculation and much better collision detection quadmaps and all
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.2,2 }), PlayerPosition({ 16,272 }), currentPlayerState(PlayerState::IDLE),
-jumpForce(-5.4f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 16,272 }) {
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.4,2 }), PlayerPosition({ 320,96 }), currentPlayerState(PlayerState::IDLE),
+jumpForce(-6.0f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 32,544 }) {
 }
 
 Player::~Player() {}
@@ -18,8 +18,8 @@ Animation anim;
 
 // Need to make this variable 
 
-float playerWidth = 15.0f;
-float playerHeight = 15.0f;
+float playerWidth = 30.0f;
+float playerHeight = 30.0f;
 
 void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 {
@@ -46,20 +46,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 
 	}
 
-	for (int i = 0;i < ObjectCollisionCoord.size();i++)
-
-	{
-
-		if (CheckCollisionRecs({ PlayerPosition.x, PlayerPosition.y, playerWidth + 1, playerHeight + 1 }, ObjectCollisionCoord[i]))
-
-		{
-
-			this->currentPlayerState = PlayerState::DEAD;
-			break;
-
-		}
-
-	}
+	
 
 	if (IsKeyDown(KEY_D) && this->currentPlayerState != PlayerState::DEAD)
 
@@ -115,6 +102,8 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 	}
 
 
+
+
 	Rectangle feetRect = { this->PlayerPosition.x,this->PlayerPosition.y + playerHeight,  playerWidth,2.0f };
 
 	bool onGround = false;
@@ -144,6 +133,8 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 
 	}
 
+
+
 	if (IsKeyPressed(KEY_SPACE) && !isJumping && this->currentPlayerState != PlayerState::DEAD) // can be onGround (Need to look into it)
 
 	{
@@ -157,8 +148,8 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 	if (isJumping)
 
 	{
-
-		verticalJumpVelocity += gravity;
+		float dt=GetFrameTime();
+		verticalJumpVelocity += gravity*dt*45;
 		dy = verticalJumpVelocity;
 
 	}
@@ -214,6 +205,20 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 		}
 	}
 
+	for (int i = 0;i < ObjectCollisionCoord.size();i++)
+
+	{
+
+		if (CheckCollisionRecs({ PlayerPosition.x, PlayerPosition.y, playerWidth + 1, playerHeight +1 }, ObjectCollisionCoord[i]))
+
+		{
+
+			this->currentPlayerState = PlayerState::DEAD;
+			break;
+
+		}
+
+	}
 
 	if (IsKeyPressed(KEY_Q) && this->currentPlayerState != PlayerState::DEAD)
 
@@ -321,7 +326,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[0], playerIdle, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[0], playerIdle, { (playerpos.x-playerWidth/2),playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight*1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
 
@@ -329,11 +334,11 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[0], playerIdle, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[0], playerIdle, { playerpos.x,playerpos.y-playerHeight/2,1.5f*playerWidth,playerHeight*1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
 
-			// DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
+			DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth+1, playerHeight+1 }, 1, RED);
 			break;
 
 		case RUNNING:
@@ -345,7 +350,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[1], playerRun, { (playerpos.x - playerWidth / 2),playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
 
@@ -353,10 +358,10 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[1], playerRun, { playerpos.x,playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
-			// DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
+			 DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
 
 		case JUMPING:
@@ -368,7 +373,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[2], playerJump, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[2], playerJump, { (playerpos.x - playerWidth / 2),playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
 
@@ -376,10 +381,10 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[2], playerJump, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[2], playerJump, { playerpos.x,playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
-			// DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
+			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
 
 		case ATTACK:
@@ -391,7 +396,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[3], playerAttack, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[3], playerAttack, { (playerpos.x - playerWidth / 2),playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
 
@@ -399,10 +404,10 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[3], playerAttack, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[3], playerAttack, { playerpos.x,playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
-			// DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
+			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
 
 		case DEAD:
@@ -412,7 +417,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[4], playerDead, { playerpos.x - 8,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[4], playerDead, { (playerpos.x - playerWidth / 2),playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
 
@@ -420,10 +425,10 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			{
 
-				DrawTexturePro(PlayerSkin[4], playerDead, { playerpos.x,playerpos.y - 8,24,24 }, { 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[4], playerDead, { playerpos.x,playerpos.y - playerHeight / 2,1.5f * playerWidth,playerHeight * 1.5f }, { 0,0 }, 0.0f, WHITE);
 
 			}
-			//   DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth, playerHeight }, 1, RED);
+			 DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
 
 		default:

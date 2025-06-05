@@ -26,17 +26,15 @@ Animation playerAnim;
 TileMap gameMap;
 
 Vector2 PlayerStartingPosition = player.PlayerPosition;
+const float CAMERA_SMOOTHNESS = 0.07f;
 
 void MainGame::InitialCamera()
-
 {
-	// TODO: Make this better 
-	this->camera.offset.x = PlayerStartingPosition.x + SCREENWIDTH / 4;
-	this->camera.offset.y = PlayerStartingPosition.y + 0.1 * SCREENHEIGHT;
-	this->camera.target = player.PlayerPosition;
-	this->camera.rotation = 0.0f;
-	this->camera.zoom = 3.2f;
-
+	camera.offset.x = 0; // One-third horizontally
+	camera.offset.y = 0; // Center vertically
+	camera.target = { 0,0 };
+	camera.rotation = 0.0f;
+	camera.zoom = 2.0f;
 }
 
 // Draw the main menu
@@ -61,19 +59,26 @@ void MainGame::DrawMenu()
 
 
 void MainGame::UpdateCamera(float deltaTime)
-
 {
+	// One-third rule: player should be at 1/3 of the screen width
+	float oneThirdX = SCREENWIDTH / 3.0f;
+	float oneThirdY = SCREENHEIGHT / 2.0f; // Keep vertical center, 
 
-	Vector2 velocity = player.PlayerVelocity;
+	// Desired camera target so player appears at (oneThirdX, oneThirdY) on screen
+	Vector2 desiredTarget;
+	desiredTarget.x = player.PlayerPosition.x - oneThirdX / camera.zoom;
+	desiredTarget.y = player.PlayerPosition.y - oneThirdY / camera.zoom;
 
-	camera.target = player.PlayerPosition;
-
+	// Smoothly interpolate camera.target towards desiredTarget
+	camera.target.x += (desiredTarget.x - camera.target.x) * CAMERA_SMOOTHNESS;
+	camera.target.y += (desiredTarget.y - camera.target.y) * CAMERA_SMOOTHNESS;
 }
+
 void MainGame::DrawPlaying()
 
 {
 
-	InitialCamera();
+	
 	BeginMode2D(camera);
 	Terrain::DrawBackground(player);
 	gameMap.DrawMap();
@@ -95,6 +100,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 		Terrain::LoadBackground(); // Load resources only once
 		gameMap.LoadMap();
 		Player::LoadPlayer();
+		InitialCamera();
 
 		isLoaded = true;
 	}

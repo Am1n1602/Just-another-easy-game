@@ -12,19 +12,19 @@ int main()
 	// Initialization 
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
-	InitAudioDevice();
+	//InitAudioDevice();
 	//ToggleFullscreen();
 	//SetExitKey(KEY_P); Uncomment in the final testing
 	// Initialise the game
-	Music music = LoadMusicStream("assets/8-bit-dungeon-251388.mp3");
-	PlayMusicStream(music);
+	//Music music = LoadMusicStream("assets/8-bit-dungeon-251388.mp3");
+	//PlayMusicStream(music);
 	MainGame game;
 	// Main game loop
 	while (!WindowShouldClose())
 
 	{
 		// Update
-		UpdateMusicStream(music);
+		//UpdateMusicStream(music);
 		float deltaTime = GetFrameTime();
 		game.Update(deltaTime);
 
@@ -37,9 +37,9 @@ int main()
 	}
 
 	// De-Initialization
-	UnloadMusicStream(music);
+	//UnloadMusicStream(music);
 	game.Unload();
-	CloseAudioDevice();
+	//CloseAudioDevice();
 	CloseWindow();
 
 	return 0;

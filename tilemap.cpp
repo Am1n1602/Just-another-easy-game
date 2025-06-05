@@ -79,6 +79,7 @@ void TileMap::LoadMap()
 					if (gid == 0) continue; // 0 means no tile
 
 					int local_id = gid - map->tilesets->firstgid;
+
 					int sx = (local_id % tileset_columns) * tile_width;
 					int sy = (local_id / tileset_columns) * tile_height;
 
@@ -86,53 +87,55 @@ void TileMap::LoadMap()
 
 					Rectangle dest = {};
 					Rectangle dest1 = {};
+					tile_width *= 2;
+					tile_height *= 2;
 
-					if (gid == 51)
+					if (gid == 51) // Right Spikes
 
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width) + tile_width / 2, (float)(y * tile_height) + 1, (float)tile_width / 2, (float)tile_height - 1 };
+						dest1 = { ((float)(x * tile_width) + tile_width / 2)+2, (float)(y * tile_height) + 2, ((float)tile_width-4) / 2, (float)tile_height - 4 };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
 
-					else if (gid == 52)
+					else if (gid == 52) // Downward Spikes
 
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width) + 1, (float)(y * tile_height), (float)tile_width, (float)tile_height / 2 };
+						dest1 = { (float)(x * tile_width+1)+2, (float)(y * tile_height+1), (float)tile_width-2, (((float)tile_height-1) / 2)-2 };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
 
-					else if (gid == 39)
+					else if (gid == 39) // Upward Spike
 
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width) + 1, (float)(y * tile_height) + tile_height / 2, (float)tile_width - 2, (float)tile_height / 2 };
+						dest1 = { (float)(x * tile_width+2) , (float)(y * tile_height) + 3*tile_height / 4, (float)tile_width - 4, (float)tile_height-1 / 2 };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
 
-					else if (gid == 60)
+					else if (gid == 60) // lava
 
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width) + 1, (float)(y * tile_height), (float)tile_width - 2, (float)tile_height };
+						dest1 = { (float)(x * tile_width)+4 , (float)(y * tile_height+1), (float)tile_width - 6, (float)tile_height };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
 
-					else if (gid == 50)
+					else if (gid == 50) //left spike
 
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width / 2, (float)tile_height };
+						dest1 = { (float)(x * tile_width+1), (float)(y * tile_height+1), ((float)tile_width / 2)-1, ((float)tile_height-1) };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
@@ -153,12 +156,15 @@ void TileMap::LoadMap()
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width+1), (float)(y * tile_height+1), (float)tile_width-1, (float)tile_height-1 };
 
 					}
 
 					this->MapGrid.push_back(std::make_pair(src, dest));
 					GridCollisionCoord.push_back(dest1);
+
+					tile_width *= 0.5;
+					tile_height *= 0.5;
 				}
 			}
 		}
@@ -178,9 +184,9 @@ void TileMap::DrawMap()
 
 	}
 
-	/*for (int i = 0;i < GridCollisionCoord.size();i++) {
-		DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, RED);
-	}*/
+	for (int i = 0;i < GridCollisionCoord.size();i++) {
+		DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, SKYBLUE);
+	}
 
 }
 
