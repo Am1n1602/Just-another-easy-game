@@ -20,7 +20,7 @@ class MainGame
 
 {
 
-private: 
+private:
 
 	GameState currentState;
 	bool isLoaded;

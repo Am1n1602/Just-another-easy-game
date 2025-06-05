@@ -6,13 +6,14 @@ int main()
 
 {
 	// TODO IMP: Unload Texture to prevent Memory leak
-	// Done
+	// Done (kinda, need to add more checks) 
+	// TODO: Error checking
 
 	// Initialization 
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
 	InitAudioDevice();
-	ToggleFullscreen();
+	//ToggleFullscreen();
 	//SetExitKey(KEY_P); Uncomment in the final testing
 	// Initialise the game
 	Music music = LoadMusicStream("assets/8-bit-dungeon-251388.mp3");
@@ -32,6 +33,7 @@ int main()
 		ClearBackground(BLACK);
 		game.Draw();
 		EndDrawing();
+
 	}
 
 	// De-Initialization

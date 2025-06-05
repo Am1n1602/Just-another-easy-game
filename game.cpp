@@ -6,9 +6,10 @@
 
 // Initial the global variables
 
-MainGame::MainGame() : currentState(GameState::MENU),isLoaded(false),
-camera(){}
-MainGame::~MainGame(){}
+MainGame::MainGame() : currentState(GameState::MENU), isLoaded(false),
+camera() {
+}
+MainGame::~MainGame() {}
 
 //<- TODO: Add the player class and imply it ->//
 // <-Update 1: Partially done player class (idle,run,attack,jump) ->
@@ -16,20 +17,22 @@ MainGame::~MainGame(){}
 //<--TODO: Add camera class and Background scrolling>
 // <-Update 2: both done->
 
+// <--TODO: Make Camera more smoother-->
+
 
 
 Player player;
-Animation PlayerAnim;
-TileMap GameMap;
+Animation playerAnim;
+TileMap gameMap;
 
 Vector2 PlayerStartingPosition = player.PlayerPosition;
-
 
 void MainGame::InitialCamera()
 
 {
+	// TODO: Make this better 
 	this->camera.offset.x = PlayerStartingPosition.x + SCREENWIDTH / 4;
-	this->camera.offset.y = PlayerStartingPosition.y + 0.1*SCREENHEIGHT;
+	this->camera.offset.y = PlayerStartingPosition.y + 0.1 * SCREENHEIGHT;
 	this->camera.target = player.PlayerPosition;
 	this->camera.rotation = 0.0f;
 	this->camera.zoom = 3.2f;
@@ -41,15 +44,17 @@ void MainGame::InitialCamera()
 void MainGame::DrawMenu()
 
 {
+
 	DrawRectangle(0, 0, SCREENWIDTH, SCREENHEIGHT, SKYBLUE);
 
 	const char* title = "My first Game";
 	int titleWidth = MeasureText(title, 60);
-
 	DrawText(title, SCREENWIDTH / 2 - titleWidth / 2, SCREENHEIGHT / 4, 60, DARKGREEN);
+
 	const char* start = "Press SPACE to Start";
 	int startWidth = MeasureText(start, 30);
-	DrawText(start, SCREENWIDTH / 2 - startWidth / 2, 2*SCREENHEIGHT/ 3, 30, DARKGRAY);
+	DrawText(start, SCREENWIDTH / 2 - startWidth / 2, 2 * SCREENHEIGHT / 3, 30, DARKGRAY);
+
 }
 
 // Draw the Playing Arena
@@ -58,6 +63,7 @@ void MainGame::DrawMenu()
 void MainGame::UpdateCamera(float deltaTime)
 
 {
+
 	Vector2 velocity = player.PlayerVelocity;
 
 	camera.target = player.PlayerPosition;
@@ -66,12 +72,13 @@ void MainGame::UpdateCamera(float deltaTime)
 void MainGame::DrawPlaying()
 
 {
+
 	InitialCamera();
 	BeginMode2D(camera);
 	Terrain::DrawBackground(player);
-	GameMap.DrawMap();
-	player.DrawPlayer(PlayerAnim);
-	GameMap.DrawObjects();
+	gameMap.DrawMap();
+	player.DrawPlayer(playerAnim);
+	gameMap.DrawObjects();
 	EndMode2D();
 
 }
@@ -81,21 +88,20 @@ void MainGame::DrawPlaying()
 void MainGame::UpdatePlaying(float deltaTime)
 
 {
+
 	if (!isLoaded)
 
 	{
 		Terrain::LoadBackground(); // Load resources only once
-		GameMap.LoadMap();
+		gameMap.LoadMap();
 		Player::LoadPlayer();
 
 		isLoaded = true;
 	}
+
 	player.PlayerPositionUpdate(player.PlayerPosition);
-	PlayerAnim.AnimationUpdate(deltaTime);
+	playerAnim.AnimationUpdate(deltaTime);
 	UpdateCamera(deltaTime);
-
-	
-
 
 	// if (IsKeyPressed(KEY_ESCAPE))
 	//{
@@ -110,7 +116,7 @@ void MainGame::UpdateMenu(float deltaTime)
 
 {
 	if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER))
-	
+
 	{
 		currentState = GameState::PLAYING;
 	}
@@ -121,6 +127,7 @@ void MainGame::UpdateMenu(float deltaTime)
 void MainGame::Update(float deltaTime)
 
 {
+
 	switch (currentState)
 
 	{
@@ -132,6 +139,7 @@ void MainGame::Update(float deltaTime)
 		UpdatePlaying(deltaTime);
 		break;
 	}
+
 }
 
 // Main draw function
@@ -139,6 +147,7 @@ void MainGame::Update(float deltaTime)
 void MainGame::Draw()
 
 {
+
 	switch (currentState)
 
 	{
@@ -150,13 +159,16 @@ void MainGame::Draw()
 		DrawPlaying();
 		break;
 	}
+
 }
 
 
 void MainGame::Unload()
 
 {
+
 	Terrain::UnloadBackground();
-	GameMap.UnloadMap();
+	gameMap.UnloadMap();
 	player.UnloadPlayer();
+
 }

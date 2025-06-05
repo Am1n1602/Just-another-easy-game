@@ -20,17 +20,17 @@ class TileMap
 {
 
 private:
-	
+
 	std::vector<std::pair<Rectangle, Rectangle>> MapGrid;
-	
+
 
 public:
 
 	TileMap();
 	~TileMap();
-	 void LoadMap();
+	void LoadMap();
 	void DrawMap();
 	void UnloadMap();
 	void DrawObjects();
-	
+
 };

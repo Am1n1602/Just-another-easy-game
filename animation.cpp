@@ -2,7 +2,8 @@
 
 
 Animation::Animation() : firstFrame(0), lastFrame(3), currentFrame(0),
-animationSpeed(0.1), durationLeft(0.1),currentAnimationType(AnimationType::REPEATING) {}
+animationSpeed(0.1), durationLeft(0.1), currentAnimationType(AnimationType::REPEATING) {
+}
 
 Animation::~Animation() {}
 
@@ -44,19 +45,19 @@ void Animation::AnimationUpdate(float deltaTime)
 			case AnimationType::REPEATING:
 				currentFrame = firstFrame;
 				break;
-				
+
 			case AnimationType::ONESHOT:
 				currentFrame = lastFrame;
 
 			default:
 				break;
 			}
-			
+
 		}
 	}
 }
 
-bool Animation::isFinished() const 
+bool Animation::isFinished() const
 
 {
 	return currentAnimationType == AnimationType::ONESHOT && currentFrame == lastFrame && durationLeft == animationSpeed;

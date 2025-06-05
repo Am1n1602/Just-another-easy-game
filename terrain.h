@@ -11,9 +11,9 @@ class Terrain
 private:
 
 public:
-	
+
 	static void LoadBackground();
 	static void DrawBackground(Player player);
 	static void UnloadBackground();
-	
+
 };
