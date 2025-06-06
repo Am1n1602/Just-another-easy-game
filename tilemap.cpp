@@ -115,7 +115,7 @@ void TileMap::LoadMap()
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width+2) , (float)(y * tile_height) + 3*tile_height / 4, (float)tile_width - 4, (float)tile_height-1 / 2 };
+						dest1 = { (float)(x * tile_width+2) , (float)(y * tile_height) + 3*tile_height / 4, (float)tile_width - 4, (float)tile_height / 2 };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
@@ -149,6 +149,21 @@ void TileMap::LoadMap()
 						SourceForSave.x = src.x;
 						SourceForSave.y = src.y;
 
+					}
+
+					else if (gid == 35) // half slab
+
+					{
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width + 1), (float)(y * tile_height + 1)+tile_height/4, (float)tile_width, (float)tile_height/6 };
+					}
+
+					else if (gid == 22) // left outward slab
+					{
+
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						dest1 = { (float)(x * tile_width ), (float)(y * tile_height)+1 , (float)tile_width, 3*(float)tile_height/4 };
+						std::cout << (float)(x * tile_width) << (float)(y * tile_height) << std::endl;
 					}
 
 					else
