@@ -30,6 +30,6 @@ public:
 	Animation();
 	~Animation();
 	void AnimationUpdate(float deltaTime);
-	Rectangle animationFrame(int numberFrameperRow, AnimationType current);
+	Rectangle animationFrame(int numberFrameperRow, AnimationType current,int width);
 
 };

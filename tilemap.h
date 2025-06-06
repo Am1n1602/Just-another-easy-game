@@ -31,6 +31,6 @@ public:
 	void LoadMap();
 	void DrawMap();
 	void UnloadMap();
-	void DrawObjects();
+	//void DrawObjects();
 
 };

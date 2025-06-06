@@ -3,8 +3,10 @@
 #include "player.h"
 #include "animation.h"
 #include "tilemap.h"
+#include "objects.h"
 
 // Initial the global variables
+
 
 MainGame::MainGame() : currentState(GameState::MENU), isLoaded(false),
 camera() {
@@ -18,23 +20,27 @@ MainGame::~MainGame() {}
 // <-Update 2: both done->
 
 // <--TODO: Make Camera more smoother-->
+// Done, Added Camera Smoothness
 
+int MainGame::DeathCount = 0;
 
 
 Player player;
 Animation playerAnim;
+Animation object;
 TileMap gameMap;
+Objects allObjects;
 
 Vector2 PlayerStartingPosition = player.PlayerPosition;
-const float CAMERA_SMOOTHNESS = 0.07f;
+const float CAMERA_SMOOTHNESS = 0.05f;
 
 void MainGame::InitialCamera()
 {
-	camera.offset.x = 0; // One-third horizontally
-	camera.offset.y = 0; // Center vertically
+	camera.offset.x = 0.0f; // One-third horizontally
+	camera.offset.y = 0.0f; // Center vertically
 	camera.target = { 0,0 };
 	camera.rotation = 0.0f;
-	camera.zoom = 2.0f;
+	camera.zoom = 2.2f; // 2.2f for final
 }
 
 // Draw the main menu
@@ -58,33 +64,50 @@ void MainGame::DrawMenu()
 // Draw the Playing Arena
 
 
+
+
 void MainGame::UpdateCamera(float deltaTime)
+
 {
+
+
 	// One-third rule: player should be at 1/3 of the screen width
 	float oneThirdX = SCREENWIDTH / 3.0f;
 	float oneThirdY = SCREENHEIGHT / 2.0f; // Keep vertical center, 
 
 	// Desired camera target so player appears at (oneThirdX, oneThirdY) on screen
-	Vector2 desiredTarget;
+	Vector2 desiredTarget{};
 	desiredTarget.x = player.PlayerPosition.x - oneThirdX / camera.zoom;
+	
 	desiredTarget.y = player.PlayerPosition.y - oneThirdY / camera.zoom;
 
 	// Smoothly interpolate camera.target towards desiredTarget
 	camera.target.x += (desiredTarget.x - camera.target.x) * CAMERA_SMOOTHNESS;
 	camera.target.y += (desiredTarget.y - camera.target.y) * CAMERA_SMOOTHNESS;
+
+
 }
+
+
 
 void MainGame::DrawPlaying()
 
 {
 
-	
 	BeginMode2D(camera);
 	Terrain::DrawBackground(player);
 	gameMap.DrawMap();
 	player.DrawPlayer(playerAnim);
-	gameMap.DrawObjects();
+	allObjects.DrawObjects(object,TYPEOBJECT::COIN);
+	DrawRectanglePro({ camera.target.x+10,camera.target.y+10,130,40 }, { 0,0 }, 0.0f, TransParentGray);
+	DrawRectangleLinesEx({ camera.target.x + 10,camera.target.y + 10,130,40 }, 3.0f, WHITE);
+	Font fort = GetFontDefault();
+	Vector2 Temp = {camera.target.x + 20, camera.target.y + 20};
+	DrawTextEx(fort,TextFormat("DEATH COUNT: %d", DeathCount),Temp,10,1,RAYWHITE);
+	
+	
 	EndMode2D();
+	
 
 }
 
@@ -100,6 +123,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 		Terrain::LoadBackground(); // Load resources only once
 		gameMap.LoadMap();
 		Player::LoadPlayer();
+		allObjects.LoadObjects();
 		InitialCamera();
 
 		isLoaded = true;
@@ -107,6 +131,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 
 	player.PlayerPositionUpdate(player.PlayerPosition);
 	playerAnim.AnimationUpdate(deltaTime);
+	object.AnimationUpdate(deltaTime);
 	UpdateCamera(deltaTime);
 
 	// if (IsKeyPressed(KEY_ESCAPE))

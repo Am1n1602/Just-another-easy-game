@@ -11,7 +11,7 @@ int GlobalFrame = 0;
 
 
 
-Rectangle Animation::animationFrame(int numberFrameperRow, AnimationType AnimationType)
+Rectangle Animation::animationFrame(int numberFrameperRow, AnimationType AnimationType, int Width)
 
 {
 
@@ -19,10 +19,10 @@ Rectangle Animation::animationFrame(int numberFrameperRow, AnimationType Animati
 
 	GlobalFrame = numberFrameperRow;
 	this->currentAnimationType = AnimationType;
-	int x = (currentFrame % numberFrameperRow) * 48;
-	int y = (currentFrame / numberFrameperRow) * 48;
+	int x = (currentFrame % numberFrameperRow) * Width;
+	int y = (currentFrame / numberFrameperRow) * Width;
 
-	return Rectangle({ (float)x,(float)y,48.0,48.0 });
+	return Rectangle({ (float)x,(float)y,(float)Width,(float)Width});
 }
 
 void Animation::AnimationUpdate(float deltaTime)

@@ -3,8 +3,10 @@
 #include <raylib.h>
 
 
-const int SCREENHEIGHT = 640;
-const int SCREENWIDTH = 960;
+const int SCREENHEIGHT = 720;
+const int SCREENWIDTH = 1280;
+
+const Color TransParentGray=Fade(LIGHTGRAY, 0.6f);
 
 enum class GameState
 
@@ -37,6 +39,7 @@ public:
 	MainGame();
 	~MainGame();
 	void InitialCamera();
+	static int DeathCount;
 	// Main Draw function
 	void Draw();
 	void Update(float deltaTime);

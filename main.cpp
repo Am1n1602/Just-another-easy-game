@@ -12,19 +12,48 @@ int main()
 	// Initialization 
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
+	SetExitKey(NULL);
 	//InitAudioDevice();
 	//ToggleFullscreen();
 	//SetExitKey(KEY_P); Uncomment in the final testing
 	// Initialise the game
 	//Music music = LoadMusicStream("assets/8-bit-dungeon-251388.mp3");
 	//PlayMusicStream(music);
+
+	bool exitWindowRequested = false;
+	bool exitWindow = false;
+
 	MainGame game;
+
+
 	// Main game loop
-	while (!WindowShouldClose())
+	while (!exitWindow)
 
 	{
 		// Update
 		//UpdateMusicStream(music);
+
+		if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE))
+
+		{
+			exitWindowRequested = true;
+		}
+
+		if (exitWindowRequested)
+
+		{
+			if (IsKeyPressed((KEY_Y)))
+
+			{
+				exitWindow = true;
+			}
+			else if (IsKeyPressed(KEY_N))
+
+			{
+				exitWindowRequested = false;
+			}
+		}
+
 		float deltaTime = GetFrameTime();
 		game.Update(deltaTime);
 
@@ -32,6 +61,12 @@ int main()
 		BeginDrawing();
 		ClearBackground(BLACK);
 		game.Draw();
+		if (exitWindowRequested)
+
+		{
+			DrawRectangle(0, 200, SCREENWIDTH, 200, BLACK);
+			DrawText("Are you sure you want to exit the game? [Y/N]", 80, 240, 40, WHITE);
+		}
 		EndDrawing();
 
 	}

@@ -163,7 +163,11 @@ void TileMap::LoadMap()
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
 						dest1 = { (float)(x * tile_width ), (float)(y * tile_height)+1 , (float)tile_width, 3*(float)tile_height/4 };
-						std::cout << (float)(x * tile_width) << (float)(y * tile_height) << std::endl;
+					}
+
+					else if (gid == 32 || gid == 33 || gid == 45 || gid == 46)
+					{
+						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
 					}
 
 					else
@@ -205,16 +209,16 @@ void TileMap::DrawMap()
 
 }
 
-void TileMap::DrawObjects()
-
-{
-	for (int i = 0;i < SavePointQueue.size();i++)
-
-	{
-		DrawTexturePro(gameMap, { SourceForSave.x,SourceForSave.y,16,16 }, SavePointQueue[i], { 0,0 }, 0.0f, WHITE);
-
-	}
-}
+//void TileMap::DrawObjects()
+//
+//{
+//	for (int i = 0;i < SavePointQueue.size();i++)
+//
+//	{
+//		DrawTexturePro(gameMap, { SourceForSave.x,SourceForSave.y,16,16 }, SavePointQueue[i], { 0,0 }, 0.0f, WHITE);
+//
+//	}
+//}
 
 void TileMap::UnloadMap()
 

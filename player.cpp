@@ -11,17 +11,19 @@
 
 // VERY IMPORTANT DO NOT CHANGE PLAYERVELOCITY IN X **SPOILER: IT WILL BREAK A MAJOR OBSTACLE 
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 896,224 }), currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 32,544 }), currentPlayerState(PlayerState::IDLE),
 jumpForce(-6.0f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 32,544 }) {
 }
 
 Player::~Player() {}
 Animation anim;
+Objects Heart;
+MainGame DeathCounter;
 
 // Need to make this variable 
 
-float playerWidth = 30.0f;
-float playerHeight = 30.0f;
+float playerWidth = 28.0f;
+float playerHeight = 28.0f;
 
 void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 {
@@ -216,6 +218,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 		{
 
 			this->currentPlayerState = PlayerState::DEAD;
+			
 			break;
 
 		}
@@ -246,6 +249,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 		this->PlayerPosition.y = Groundlevel.y;
 		this->PlayerDirection = Direction::RIGHT;
 		this->currentPlayerState = PlayerState::IDLE;
+		DeathCounter.DeathCount += 1;
 
 	}
 
@@ -322,7 +326,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 			// the size of the player is something which is giving problem
 		case IDLE:
 
-			Rectangle playerIdle = PlayerAnim.animationFrame(4, AnimationType::REPEATING);
+			Rectangle playerIdle = PlayerAnim.animationFrame(4, AnimationType::REPEATING,48);
 			playerIdle.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -346,7 +350,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 		case RUNNING:
 
-			Rectangle playerRun = PlayerAnim.animationFrame(6, AnimationType::REPEATING);
+			Rectangle playerRun = PlayerAnim.animationFrame(6, AnimationType::REPEATING,48);
 			playerRun.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -369,7 +373,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 		case JUMPING:
 
-			Rectangle playerJump = PlayerAnim.animationFrame(4, AnimationType::ONESHOT);
+			Rectangle playerJump = PlayerAnim.animationFrame(4, AnimationType::ONESHOT,48);
 			playerJump.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -392,7 +396,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 		case ATTACK:
 
-			Rectangle playerAttack = PlayerAnim.animationFrame(8, AnimationType::ONESHOT);
+			Rectangle playerAttack = PlayerAnim.animationFrame(8, AnimationType::ONESHOT,48);
 			playerAttack.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -415,7 +419,10 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 		case DEAD:
 
-			Rectangle playerDead = PlayerAnim.animationFrame(6, AnimationType::ONESHOT);
+			Rectangle playerDead = PlayerAnim.animationFrame(6, AnimationType::ONESHOT,48);
+			Heart.PositionX = playerpos.x;
+			Heart.PositionY = playerpos.y-10;
+			Heart.DrawObjects(PlayerAnim,TYPEOBJECT::HEART);
 			if (PlayerDirection == Direction::LEFT)
 
 			{

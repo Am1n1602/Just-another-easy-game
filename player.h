@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 #include "animation.h"
-
+#include "objects.h"
 
 enum Direction
 
