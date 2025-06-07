@@ -270,6 +270,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 		this->PlayerPosition.y = Groundlevel.y;
 		this->PlayerDirection = Direction::RIGHT;
 		this->currentPlayerState = PlayerState::IDLE;
+		DeathCounter.DeathCount += 1;
 
 	}
 }

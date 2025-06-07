@@ -1,6 +1,6 @@
 #include <raylib.h>
 #include "game.h"
-
+#include <iostream>
 
 int main()
 
@@ -24,6 +24,7 @@ int main()
 	bool exitWindow = false;
 
 	MainGame game;
+
 
 
 	// Main game loop
@@ -55,6 +56,8 @@ int main()
 		}
 
 		float deltaTime = GetFrameTime();
+		game.TimeTaken(deltaTime);
+	
 		game.Update(deltaTime);
 
 		// Drawing on screen

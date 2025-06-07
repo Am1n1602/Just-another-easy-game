@@ -1,13 +1,15 @@
 #include "objects.h"
-
+#include <iostream>
 Objects::Objects() {}
 Objects::~Objects() {}
 
 Player Objplayer;
 
-
+std::vector <Rectangle> LavaPoint;
 static Texture2D Coin = { 0 };
 static Texture2D HeartEffect = { 0 };
+static Texture2D LavaEffect = { 0 };
+
 
 void Objects::LoadObjects()
 
@@ -22,12 +24,15 @@ void Objects::LoadObjects()
 	{
 		HeartEffect = LoadTexture("assets/lost_hearts_anim_strip_5.png");
 	}
+    if (LavaEffect.id == 0) {
+        LavaEffect = LoadTexture("assets/lava.png");
+    }
 }
+
 
 void Objects::DrawObjects(Animation Object,TYPEOBJECT currentObjectType)
 {
     Vector2 heart1 = {this->PositionX,this->PositionY }; // Moved outside the switch block
-
     switch (currentObjectType)
     {
     case COIN:
@@ -43,9 +48,19 @@ void Objects::DrawObjects(Animation Object,TYPEOBJECT currentObjectType)
         DrawTexturePro(HeartEffect, heartAnim, { heart1.x, heart1.y, 16, 16 }, { 0, 0 }, 0.0f, WHITE);
         break;
 
+    case LAVA:
+            Rectangle lavaAnim = Object.animationFrame(4, AnimationType::REPEATING, 16);
+        for (int i = 0; i < LavaPoint.size(); i++)
+        {
+            DrawTexturePro(LavaEffect, lavaAnim, LavaPoint[i], { 0,0 }, 0.0f, WHITE);
+        }
+        break;
+
     default:
         break;
     }
 }
+
+
 
 

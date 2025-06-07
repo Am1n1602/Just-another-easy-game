@@ -41,6 +41,8 @@ public:
 	void InitialCamera();
 	static int DeathCount;
 	// Main Draw function
+	static float TotalTime;
+	void TimeTaken(float deltaTime);
 	void Draw();
 	void Update(float deltaTime);
 	void UpdateCamera(float deltaTime);

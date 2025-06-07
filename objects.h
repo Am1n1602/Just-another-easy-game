@@ -4,10 +4,12 @@
 #include "animation.h"
 #include "tilemap.h"
 #include "player.h"
+	extern std::vector <Rectangle> LavaPoint;
 
 enum TYPEOBJECT {
 	COIN,
 	HEART,
+	LAVA,
 };
 
 class Objects

@@ -4,7 +4,7 @@
 #include "animation.h"
 #include "tilemap.h"
 #include "objects.h"
-
+#include <iomanip>
 // Initial the global variables
 
 
@@ -23,7 +23,7 @@ MainGame::~MainGame() {}
 // Done, Added Camera Smoothness
 
 int MainGame::DeathCount = 0;
-
+float MainGame::TotalTime = 0;
 
 Player player;
 Animation playerAnim;
@@ -32,7 +32,7 @@ TileMap gameMap;
 Objects allObjects;
 
 Vector2 PlayerStartingPosition = player.PlayerPosition;
-const float CAMERA_SMOOTHNESS = 0.05f;
+const float CAMERA_SMOOTHNESS = 0.04f;
 
 void MainGame::InitialCamera()
 {
@@ -88,6 +88,21 @@ void MainGame::UpdateCamera(float deltaTime)
 
 }
 
+float rounded(float var)
+{
+	float value = (int)(var * 100 + .5);
+	return (float)value / 100;
+}
+
+void MainGame::TimeTaken(float deltatime)
+
+{
+	if (this->currentState == GameState::PLAYING) {
+		TotalTime += deltatime;
+	}
+	
+	
+}
 
 
 void MainGame::DrawPlaying()
@@ -99,11 +114,18 @@ void MainGame::DrawPlaying()
 	gameMap.DrawMap();
 	player.DrawPlayer(playerAnim);
 	allObjects.DrawObjects(object,TYPEOBJECT::COIN);
+	allObjects.DrawObjects(object, TYPEOBJECT::LAVA);
+
+	// TODO: Either make a new class or function for this 
+	// TODO: Make time in Min:sec:ms format
 	DrawRectanglePro({ camera.target.x+10,camera.target.y+10,130,40 }, { 0,0 }, 0.0f, TransParentGray);
 	DrawRectangleLinesEx({ camera.target.x + 10,camera.target.y + 10,130,40 }, 3.0f, WHITE);
 	Font fort = GetFontDefault();
 	Vector2 Temp = {camera.target.x + 20, camera.target.y + 20};
-	DrawTextEx(fort,TextFormat("DEATH COUNT: %d", DeathCount),Temp,10,1,RAYWHITE);
+	Vector2 Temp2 = { camera.target.x + 20, camera.target.y + 35 };
+	DrawTextEx(fort,TextFormat("DEATH COUNT: %d", DeathCount),Temp,10,1,GREEN);
+	DrawTextEx(fort, TextFormat("TIME: %f", rounded(TotalTime)), Temp2, 10, 1, GREEN);
+	
 	
 	
 	EndMode2D();

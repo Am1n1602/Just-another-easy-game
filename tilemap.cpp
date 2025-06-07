@@ -10,6 +10,8 @@ Vector2 SourceForSave;
 
 TileMap::TileMap() : MapGrid() {}
 TileMap::~TileMap() {}
+Objects Lava;
+Animation AnimLava;
 
 static Texture gameMap = { 0 };
 
@@ -124,7 +126,7 @@ void TileMap::LoadMap()
 
 					{
 
-						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
+						LavaPoint.push_back({ (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height });
 						dest1 = { (float)(x * tile_width)+4 , (float)(y * tile_height+1), (float)tile_width - 6, (float)tile_height };
 						ObjectCollisionCoord.push_back(dest1);
 

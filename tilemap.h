@@ -9,6 +9,7 @@
 #include <fstream>
 #include <deque>
 #include <algorithm>
+#include "objects.h"
 
 
 extern std::vector <Rectangle> GridCollisionCoord;
