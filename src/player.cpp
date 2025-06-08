@@ -11,7 +11,7 @@
 
 // VERY IMPORTANT DO NOT CHANGE PLAYERVELOCITY IN X **SPOILER: IT WILL BREAK A MAJOR OBSTACLE 
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 32,544 }), currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 32,554 }), currentPlayerState(PlayerState::IDLE),
 jumpForce(-6.0f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 32,544 }) {
 }
 
@@ -25,18 +25,34 @@ MainGame DeathCounter;
 float playerWidth = 28.0f;
 float playerHeight = 28.0f;
 
-void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
+void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isWin)
 {
 
 	bool moving = false;
 	float dx = 0.0f;
 	float dy = 0.0f;
 
+	if (isReset)
+	{
+		SavePointQueue = SavePointQueueBackup;
+		this->PlayerPosition.x = 32;
+		this->PlayerPosition.y = 544;
+		Groundlevel.x = 32;
+		Groundlevel.y = 544;
+		isWin = false;
+		isReset = false;
+	}
+
+	if (CheckCollisionRecs({ this->PlayerPosition.x, this->PlayerPosition.y, playerWidth, playerHeight }, { 1248,576,playerWidth,playerHeight }))
+	{
+		isWin=true;
+	}
+
+
 
 	for (auto it = SavePointQueue.begin(); it != SavePointQueue.end(); ++it)
 
 	{
-
 		if (CheckCollisionRecs({ this->PlayerPosition.x, this->PlayerPosition.y, playerWidth, playerHeight }, *it))
 
 		{
@@ -48,6 +64,8 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition)
 
 		}
 
+		
+		
 	}
 
 	

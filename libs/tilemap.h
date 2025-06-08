@@ -15,6 +15,7 @@
 extern std::vector <Rectangle> GridCollisionCoord;
 extern std::vector <Rectangle> ObjectCollisionCoord;
 extern std::deque <Rectangle> SavePointQueue;
+extern std::deque <Rectangle> SavePointQueueBackup;
 
 class TileMap
 

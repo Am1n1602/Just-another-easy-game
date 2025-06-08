@@ -30,9 +30,9 @@ void Objects::LoadObjects()
 }
 
 
-void Objects::DrawObjects(Animation Object,TYPEOBJECT currentObjectType)
+void Objects::DrawObjects(Animation Object, TYPEOBJECT currentObjectType)
 {
-    Vector2 heart1 = {this->PositionX,this->PositionY }; // Moved outside the switch block
+    Vector2 heart1 = { this->PositionX,this->PositionY }; // Moved outside the switch block
     switch (currentObjectType)
     {
     case COIN:
@@ -49,7 +49,7 @@ void Objects::DrawObjects(Animation Object,TYPEOBJECT currentObjectType)
         break;
 
     case LAVA:
-            Rectangle lavaAnim = Object.animationFrame(4, AnimationType::REPEATING, 16);
+        Rectangle lavaAnim = Object.animationFrame(4, AnimationType::REPEATING, 16);
         for (int i = 0; i < LavaPoint.size(); i++)
         {
             DrawTexturePro(LavaEffect, lavaAnim, LavaPoint[i], { 0,0 }, 0.0f, WHITE);
@@ -59,8 +59,16 @@ void Objects::DrawObjects(Animation Object,TYPEOBJECT currentObjectType)
     default:
         break;
     }
+
 }
 
+    void Objects::UnloadObjects()
+
+    {
+        UnloadTexture(Coin);
+        UnloadTexture(HeartEffect);
+        UnloadTexture(LavaEffect);
+    }
 
 
 

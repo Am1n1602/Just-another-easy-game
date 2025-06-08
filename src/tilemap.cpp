@@ -7,6 +7,8 @@ std::vector<Rectangle> GridCollisionCoord;
 std::vector<Rectangle> ObjectCollisionCoord;
 std::deque <Rectangle> SavePointQueue;
 Vector2 SourceForSave;
+std::deque <Rectangle> SavePointQueueBackup;
+
 
 TileMap::TileMap() : MapGrid() {}
 TileMap::~TileMap() {}
@@ -127,7 +129,7 @@ void TileMap::LoadMap()
 					{
 
 						LavaPoint.push_back({ (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height });
-						dest1 = { (float)(x * tile_width)+4 , (float)(y * tile_height+1), (float)tile_width - 6, (float)tile_height };
+						dest1 = { (float)(x * tile_width)+5 , (float)(y * tile_height+1), (float)tile_width - 7, (float)tile_height };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
@@ -142,12 +144,13 @@ void TileMap::LoadMap()
 
 					}
 
-					else if (gid == 16)
+					else if (gid == 16) // Card
 
 					{
 
 						Rectangle dester = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
 						SavePointQueue.push_back(dester);
+						SavePointQueueBackup.push_back(dester);
 						SourceForSave.x = src.x;
 						SourceForSave.y = src.y;
 

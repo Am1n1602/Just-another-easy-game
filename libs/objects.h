@@ -21,6 +21,7 @@ public:
 	void DrawObjects(Animation Object,TYPEOBJECT);
 	float PositionX;
 	float PositionY;
+	void UnloadObjects();
 
 private:
 

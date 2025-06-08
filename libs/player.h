@@ -43,7 +43,7 @@ public:
 	Direction PlayerDirection;
 	Player();
 	~Player();
-	void PlayerPositionUpdate(Vector2 PlayerPosition);
+	void PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isWin);
 	static void LoadPlayer();
 	void DrawPlayer(Animation& PlayerAnim);
 

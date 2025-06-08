@@ -34,7 +34,7 @@ int main()
 		// Update
 		//UpdateMusicStream(music);
 
-		if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE))
+		if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE) && (game.currentState== GameState::MENU))
 
 		{
 			exitWindowRequested = true;
@@ -52,14 +52,26 @@ int main()
 
 			{
 				exitWindowRequested = false;
+				game.GameShouldClose = false;
+				
 			}
 		}
 
 		float deltaTime = GetFrameTime();
-		game.TimeTaken(deltaTime);
-	
-		game.Update(deltaTime);
+		if (game.currentState == GameState::PLAYING) {
+			game.TimeTaken(deltaTime,true);
+		}
+		else if (game.currentState == GameState::MENU)
+		{
+			game.TimeTaken(deltaTime, false);
+		}
 
+		
+		game.Update(deltaTime);
+		if (game.GameShouldClose)
+		{
+			exitWindowRequested = true;
+		}
 		// Drawing on screen
 		BeginDrawing();
 		ClearBackground(BLACK);
@@ -67,8 +79,8 @@ int main()
 		if (exitWindowRequested)
 
 		{
-			DrawRectangle(0, 200, SCREENWIDTH, 200, BLACK);
-			DrawText("Are you sure you want to exit the game? [Y/N]", 80, 240, 40, WHITE);
+			DrawRectangle(0, SCREENHEIGHT/4, SCREENWIDTH,SCREENHEIGHT/2 , BLACK);
+			DrawTextEx(game.fort,"Are you sure you want to exit the game? [Y/N]",{80,350},45,0.4,WHITE);
 		}
 		EndDrawing();
 
