@@ -364,7 +364,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			}
 
-			DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth + 1, playerHeight + 1 }, 1, RED);
+		/*	DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth + 1, playerHeight + 1 }, 1, RED);*/
 			break;
 		}
 
@@ -389,7 +389,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 				DrawTexturePro(PlayerSkin[1], playerRun, DrawPlayerPositionRight, { 0,0 }, 0.0f, WHITE);
 
 			}
-			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
+		/*	DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);*/
 			break;
 		}
 
@@ -414,7 +414,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 				DrawTexturePro(PlayerSkin[2], playerJump, DrawPlayerPositionRight, { 0,0 }, 0.0f, WHITE);
 
 			}
-			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
+			/*DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);*/
 			break;
 
 		}
@@ -438,7 +438,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 				DrawTexturePro(PlayerSkin[3], playerAttack, DrawPlayerPositionRight, { 0,0 }, 0.0f, WHITE);
 
 			}
-			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
+		/*	DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);*/
 			break;
 		}
 		case DEAD:
@@ -462,7 +462,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 				DrawTexturePro(PlayerSkin[4], playerDead, DrawPlayerPositionRight, { 0,0 }, 0.0f, WHITE);
 
 			}
-			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
+			//DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
 		}
 		default:
