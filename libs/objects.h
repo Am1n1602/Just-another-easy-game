@@ -18,6 +18,7 @@ public:
 	Objects();
 	~Objects();
 	void LoadObjects();
+	TYPEOBJECT currentTypeObject;
 	void DrawObjects(Animation Object,TYPEOBJECT);
 	float PositionX;
 	float PositionY;

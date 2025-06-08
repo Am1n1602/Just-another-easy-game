@@ -11,15 +11,14 @@ file(GLOB_RECURSE SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/src/*.cpp
 )
 
-# Try to find a system install of raylib 5.5+
-find_package(raylib 5.5 QUIET)
+# Try to find a system install of raylib 
+find_package(raylib 4.0 QUIET)
 
 if (NOT raylib_FOUND)
   include(FetchContent)
   FetchContent_Declare(
     raylib
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
-    GIT_TAG        v5.5.0
   )
   FetchContent_MakeAvailable(raylib)
 endif()

@@ -441,7 +441,7 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 			Rectangle playerDead = PlayerAnim.animationFrame(6, AnimationType::ONESHOT,48);
 			Heart.PositionX = playerpos.x;
 			Heart.PositionY = playerpos.y-10;
-			Heart.DrawObjects(PlayerAnim,TYPEOBJECT::HEART);
+			Heart.DrawObjects(PlayerAnim, TYPEOBJECT::HEART);
 			if (PlayerDirection == Direction::LEFT)
 
 			{

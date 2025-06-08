@@ -1,6 +1,6 @@
 #include "objects.h"
 #include <iostream>
-Objects::Objects() {}
+Objects::Objects(): currentTypeObject(LAVA) {}
 Objects::~Objects() {}
 
 Player Objplayer;
@@ -33,7 +33,9 @@ void Objects::LoadObjects()
 void Objects::DrawObjects(Animation Object, TYPEOBJECT currentObjectType)
 {
     Vector2 heart1 = { this->PositionX,this->PositionY }; // Moved outside the switch block
-    switch (currentObjectType)
+
+    this->currentTypeObject = currentObjectType;
+    switch (this->currentTypeObject)
     {
     case COIN:
         Rectangle savePoint = Object.animationFrame(8, AnimationType::REPEATING, 24);
