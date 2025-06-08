@@ -38,29 +38,33 @@ void Objects::DrawObjects(Animation Object, TYPEOBJECT currentObjectType)
     switch (this->currentTypeObject)
     {
     case COIN:
+    {
         Rectangle savePoint = Object.animationFrame(8, AnimationType::REPEATING, 24);
         for (int i = 0; i < SavePointQueue.size(); i++)
         {
             DrawTexturePro(Coin, savePoint, { SavePointQueue[i].x, SavePointQueue[i].y, 40, 40 }, { 0, 0 }, 0.0f, WHITE);
         }
         break;
-
+    }
     case HEART:
+    {
         Rectangle heartAnim = Object.animationFrame(4, AnimationType::ONESHOT, 16);
         DrawTexturePro(HeartEffect, heartAnim, { heart1.x, heart1.y, 16, 16 }, { 0, 0 }, 0.0f, WHITE);
         break;
-
+    }
     case LAVA:
+    {
         Rectangle lavaAnim = Object.animationFrame(4, AnimationType::REPEATING, 16);
         for (int i = 0; i < LavaPoint.size(); i++)
         {
             DrawTexturePro(LavaEffect, lavaAnim, LavaPoint[i], { 0,0 }, 0.0f, WHITE);
         }
         break;
-
+    }
     default:
         break;
     }
+
 
 }
 
@@ -71,6 +75,4 @@ void Objects::DrawObjects(Animation Object, TYPEOBJECT currentObjectType)
         UnloadTexture(HeartEffect);
         UnloadTexture(LavaEffect);
     }
-
-
 

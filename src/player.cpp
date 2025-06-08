@@ -11,7 +11,7 @@
 
 // VERY IMPORTANT DO NOT CHANGE PLAYERVELOCITY IN X **SPOILER: IT WILL BREAK A MAJOR OBSTACLE 
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 32,554 }), currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 32,530 }), currentPlayerState(PlayerState::IDLE),
 jumpForce(-6.0f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 32,544 }) {
 }
 
@@ -344,8 +344,8 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 		{
 			// the size of the player is something which is giving problem
 		case IDLE:
-
-			Rectangle playerIdle = PlayerAnim.animationFrame(4, AnimationType::REPEATING,48);
+		{
+			Rectangle playerIdle = PlayerAnim.animationFrame(4, AnimationType::REPEATING, 48);
 			playerIdle.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -364,12 +364,14 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 
 			}
 
-			DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth+1, playerHeight+1 }, 1, RED);
+			DrawRectangleLinesEx({ playerpos.x, playerpos.y, playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
+		}
 
 		case RUNNING:
+		{
 
-			Rectangle playerRun = PlayerAnim.animationFrame(6, AnimationType::REPEATING,48);
+			Rectangle playerRun = PlayerAnim.animationFrame(6, AnimationType::REPEATING, 48);
 			playerRun.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -387,19 +389,21 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 				DrawTexturePro(PlayerSkin[1], playerRun, DrawPlayerPositionRight, { 0,0 }, 0.0f, WHITE);
 
 			}
-			 DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
+			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
+		}
 
 		case JUMPING:
 
-			Rectangle playerJump = PlayerAnim.animationFrame(4, AnimationType::ONESHOT,48);
+		{
+			Rectangle playerJump = PlayerAnim.animationFrame(4, AnimationType::ONESHOT, 48);
 			playerJump.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
 
 			{
 
-				DrawTexturePro(PlayerSkin[2], playerJump, DrawPlayerPositionLeft,{ 0,0 }, 0.0f, WHITE);
+				DrawTexturePro(PlayerSkin[2], playerJump, DrawPlayerPositionLeft, { 0,0 }, 0.0f, WHITE);
 
 			}
 
@@ -413,9 +417,10 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
 
+		}
 		case ATTACK:
-
-			Rectangle playerAttack = PlayerAnim.animationFrame(8, AnimationType::ONESHOT,48);
+		{
+			Rectangle playerAttack = PlayerAnim.animationFrame(8, AnimationType::ONESHOT, 48);
 			playerAttack.width *= this->PlayerDirection;
 
 			if (PlayerDirection == Direction::LEFT)
@@ -435,12 +440,12 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 			}
 			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
-
+		}
 		case DEAD:
-
-			Rectangle playerDead = PlayerAnim.animationFrame(6, AnimationType::ONESHOT,48);
+		{
+			Rectangle playerDead = PlayerAnim.animationFrame(6, AnimationType::ONESHOT, 48);
 			Heart.PositionX = playerpos.x;
-			Heart.PositionY = playerpos.y-10;
+			Heart.PositionY = playerpos.y - 10;
 			Heart.DrawObjects(PlayerAnim, TYPEOBJECT::HEART);
 			if (PlayerDirection == Direction::LEFT)
 
@@ -457,11 +462,13 @@ void Player::DrawPlayer(Animation& PlayerAnim)
 				DrawTexturePro(PlayerSkin[4], playerDead, DrawPlayerPositionRight, { 0,0 }, 0.0f, WHITE);
 
 			}
-			 DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
+			DrawRectangleLinesEx({ playerpos.x, playerpos.y,  playerWidth + 1, playerHeight + 1 }, 1, RED);
 			break;
-
+		}
 		default:
+		{
 			break;
+		}
 		}
 
 
