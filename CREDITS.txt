@@ -1,0 +1,34 @@
+This project makes use of the following third-party assets, libraries, and tools. All assets listed below are free for commercial use under their respective licenses. I gratefully acknowledge the original creators and sources.
+
+1. Graphics & Spirits (Tilemap)
+  - Source: [Dungeon Platformer Tileset [16x16][FREE] - RottingPixels]
+  - URL: https://rottingpixels.itch.io/
+
+2. Player 
+  -Source: [Free 3 Cyberpunk Sprites Pixel Art]
+  -URL: https://free-game-assets.itch.io/free-3-cyberpunk-sprites-pixel-art
+
+  -Source: [platformer_metroidvania asset pack v1.01]
+  -URL: https://o-lobster.itch.io/
+
+3. Audio & Sound Effects
+  -Source: [Lose_C_04]
+  -URL: https://freesound.org/people/cabled_mess/
+
+  -Source: [ukulele simple sound]
+  -URL: https://freesound.org/people/Tetoszka/
+
+  -Source: [Sci Fi UI Button Sound 018.wav]
+  -URL: https://freesound.org/people/crash_358/
+
+  -Source: [j1game_over_mono.wav]
+  -URL: https://freesound.org/people/jivatma07/
+
+  -Source: [164bpm video game music (preview)]
+  -URL: https://freesound.org/people/Seth_Makes_Sounds/
+
+4 Font 
+  -Source: [dungeon-chunk-main]
+  -URL: https://github.com/PriorityInterrupt
+
+If you believe any credit is missing or incorrect, please open an issue or submit a pull request. Thank you to all creators for providing these high‑quality resources under open licenses.
