@@ -13,13 +13,11 @@ int main()
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
 	SetTargetFPS(60);
 	SetExitKey(NULL);
-	//InitAudioDevice();
+	InitAudioDevice();
 	//ToggleFullscreen();
-	//SetExitKey(KEY_P); Uncomment in the final testing
-	// Initialise the game
-	//Music music = LoadMusicStream("assets/8-bit-dungeon-251388.mp3");
-	//PlayMusicStream(music);
 
+	Sound MainSound = LoadSound("assets/699618__seth_makes_sounds__164bpm-video-game-music-preview.wav");
+	PlaySound(MainSound);
 	bool exitWindowRequested = false;
 	bool exitWindow = false;
 
@@ -32,7 +30,10 @@ int main()
 
 	{
 		// Update
-		//UpdateMusicStream(music);
+		if(!IsSoundPlaying(MainSound))
+		{
+			PlaySound(MainSound);
+		}
 
 		if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE) && (game.currentState== GameState::MENU))
 
@@ -87,9 +88,9 @@ int main()
 	}
 
 	// De-Initialization
-	//UnloadMusicStream(music);
+	UnloadSound(MainSound);
 	game.Unload();
-	//CloseAudioDevice();
+	CloseAudioDevice();
 	CloseWindow();
 
 	return 0;

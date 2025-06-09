@@ -19,6 +19,9 @@ Player::~Player() {}
 Animation anim;
 Objects Heart;
 MainGame DeathCounter;
+Sound SavePointSound;
+Sound DeathSound;
+Sound GameOverSound;
 
 // Need to make this variable 
 
@@ -46,6 +49,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isW
 	if (CheckCollisionRecs({ this->PlayerPosition.x, this->PlayerPosition.y, playerWidth, playerHeight }, { 1248,576,playerWidth,playerHeight }))
 	{
 		isWin=true;
+		PlaySound(GameOverSound);
 	}
 
 
@@ -56,7 +60,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isW
 		if (CheckCollisionRecs({ this->PlayerPosition.x, this->PlayerPosition.y, playerWidth, playerHeight }, *it))
 
 		{
-
+			PlaySound(SavePointSound);
 			Groundlevel.x = it->x;
 			Groundlevel.y = it->y;
 			SavePointQueue.erase(it); // Remove the collided save point
@@ -235,6 +239,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isW
 
 		{
 
+			PlaySound(DeathSound);
 			this->currentPlayerState = PlayerState::DEAD;
 			
 			break;
@@ -263,6 +268,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isW
 	if (this->currentPlayerState == PlayerState::DEAD && anim.isFinished())
 
 	{
+		
 		this->PlayerPosition.x = Groundlevel.x;
 		this->PlayerPosition.y = Groundlevel.y;
 		this->PlayerDirection = Direction::RIGHT;
@@ -284,6 +290,7 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isW
 	if (this->PlayerPosition.y >= 1000)
 
 	{
+		PlaySound(DeathSound);
 		this->PlayerPosition.x = Groundlevel.x;
 		this->PlayerPosition.y = Groundlevel.y;
 		this->PlayerDirection = Direction::RIGHT;
@@ -325,6 +332,14 @@ void Player::LoadPlayer()
 	if (PlayerSkin[4].id == 0) {
 		PlayerSkin[4] = LoadTexture("assets/Biker_death.png");
 	}
+}
+
+void Player::LoadPlayerSound()
+
+{
+	DeathSound = LoadSound("assets/350988__cabled_mess__lose_c_04.wav");
+	SavePointSound = LoadSound("assets/535449__tetoszka__ukulele-simple-sound.wav");
+	GameOverSound = LoadSound("assets/173859__jivatma07__j1game_over_mono.wav");
 }
 
 void Player::DrawPlayer(Animation& PlayerAnim)
@@ -484,4 +499,7 @@ void Player::UnloadPlayer()
 	{
 		UnloadTexture(PlayerSkin[i]);
 	}
+	UnloadSound(DeathSound);
+	UnloadSound(SavePointSound);
+	UnloadSound(GameOverSound);
 }

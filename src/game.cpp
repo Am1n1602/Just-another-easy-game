@@ -33,6 +33,7 @@ bool isWin = false;
 int FinalMin = 0;
 int FinalSec = 0;
 int FinalMs = 0;
+Sound ButtonSound;
 
 
 Player player;
@@ -225,6 +226,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 		Player::LoadPlayer();
 		allObjects.LoadObjects();
 		InitialCamera();
+		player.LoadPlayerSound();
 
 		isLoaded = true;
 	}
@@ -237,6 +239,7 @@ void MainGame::UpdatePlaying(float deltaTime)
 	if (IsKeyPressed(KEY_ESCAPE))
 	{
 		currentState = GameState::PAUSE;
+		PlaySound(ButtonSound);
 	}
 	if (isWin && currentState==GameState::PLAYING)
 	{
@@ -262,7 +265,7 @@ void MainGame::UpdateMenu(float deltaTime)
 		SwitchMenu = true;
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
-			
+			PlaySound(ButtonSound);
 			currentState = GameState::PLAYING;
 		}
 	}
@@ -274,7 +277,7 @@ void MainGame::UpdateMenu(float deltaTime)
 	if (IsKeyPressed(KEY_ENTER))
 
 	{
-		
+		PlaySound(ButtonSound);
 		currentState = GameState::PLAYING;
 	}
 
@@ -286,6 +289,7 @@ void MainGame::UpdateMenu(float deltaTime)
 		{
 			currentState = GameState::MENU;
 			GameShouldClose = true;
+			PlaySound(ButtonSound);
 
 		}
 	}
@@ -296,6 +300,7 @@ void MainGame::UpdateMenu(float deltaTime)
 
 	{
 		currentState = GameState::MENU;
+		PlaySound(ButtonSound);
 	}
 
 }
@@ -314,6 +319,7 @@ void MainGame::UpdatePause(float deltaTime)
 				PauseToResume = true;
 				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				{
+					PlaySound(ButtonSound);
 					currentState = GameState::PLAYING;
 					
 				}
@@ -322,6 +328,7 @@ void MainGame::UpdatePause(float deltaTime)
 				PauseToResume = false;
 			}
 			if (IsKeyPressed(KEY_ESCAPE)) {
+				PlaySound(ButtonSound);
 				currentState = GameState::PLAYING;
 				
 			}
@@ -332,6 +339,7 @@ void MainGame::UpdatePause(float deltaTime)
 				PauseToExit = true;
 				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				{
+					PlaySound(ButtonSound);
 					currentState = GameState::MENU;
 					isReset = true;
 				}
@@ -395,7 +403,9 @@ void MainGame::Draw()
 		if (!isBgLoaded)
 		{
 			MainMenuBg = LoadTexture("assets/Main_Menu_Bg2.png");
+			ButtonSound = LoadSound("assets/615542__crash_358__sci-fi-ui-button-sound-018.wav");
 			isBgLoaded = true;
+
 		}
 		DrawMenu(MainMenuBg);
 		break;
@@ -423,6 +433,7 @@ void MainGame::Unload()
 	gameMap.UnloadMap();
 	player.UnloadPlayer();
 	allObjects.UnloadObjects();
+	UnloadSound(ButtonSound);
 	UnloadTexture(MainMenuBg);
 
 }

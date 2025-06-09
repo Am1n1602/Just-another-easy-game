@@ -45,6 +45,7 @@ public:
 	~Player();
 	void PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isWin);
 	static void LoadPlayer();
+	void LoadPlayerSound();
 	void DrawPlayer(Animation& PlayerAnim);
 
 	static void UnloadPlayer();
