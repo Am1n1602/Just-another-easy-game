@@ -3,7 +3,7 @@
 ![](Main_Menu_Bg2.png) 
 
 A simple (not really) 2nd platformer game built using [raylib](https://www.raylib.com/).  
-You can also play it online: ![Play on itch.io]([#](https://am1n-1602.itch.io/just-another-easy-game)) <!-- Add the actual itch.io link here -->
+You can also play it online: [Play on itch.io](https://am1n-1602.itch.io/just-another-easy-game) 
 
 ---
 
