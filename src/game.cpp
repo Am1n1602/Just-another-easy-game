@@ -148,13 +148,23 @@ void MainGame::DrawPlaying()
 	allObjects.DrawObjects(object,TYPEOBJECT::COIN);
 	allObjects.DrawObjects(object, TYPEOBJECT::LAVA);
 
-	// TODO: Either make a new class or function for this 
-	// TODO: Make time in Min:sec:ms format
-	// Done
+	if (TotalTime <= 10) {
+
+		DrawText("PRESS D for Right Movement ", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 70, 10, YELLOW);
+		DrawText("PRESS A for Left Movement", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 50, 10, YELLOW);
+		DrawText("PRESS SPACE for Jump", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 30, 10, YELLOW);
+
+	}
+
+	if (TotalTime <= 15 && TotalTime > 10)
+	{
+		DrawText("HAVE FUN !", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 50, 20, YELLOW);
+	}
+
 	DrawRectangleRounded({ camera.target.x + 10,camera.target.y + 10,130,40 }, 0.2, 1, BlueBlueTrans);
-	//DrawRectanglePro({ camera.target.x+10,camera.target.y+10,130,40 }, { 0,0 }, 0.0f, BlueBlue);
+
 	DrawRectangleRoundedLinesEx({ camera.target.x + 10,camera.target.y + 10,130,40 }, 0.3, 1, 2, LIGHTGRAY);
-	//DrawRectangleLinesEx({ camera.target.x + 10,camera.target.y + 10,130,40 }, 2.0f, VibrantOrange);
+
 	Vector2 Temp = {camera.target.x + 20, camera.target.y + 20};
 	Vector2 Temp2 = { camera.target.x + 20, camera.target.y + 35 };
 	DrawTextEx(fort,TextFormat("DEATH COUNT: %d", DeathCount),Temp,10,2,YELLOW);

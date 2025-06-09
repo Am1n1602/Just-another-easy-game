@@ -11,6 +11,8 @@ int main()
 
 	// Initialization 
 	InitWindow(SCREENWIDTH, SCREENHEIGHT, "My first game");
+
+
 	SetTargetFPS(60);
 	SetExitKey(NULL);
 	InitAudioDevice();
@@ -29,6 +31,13 @@ int main()
 	while (!exitWindow)
 
 	{
+
+		if (IsKeyPressed(KEY_F11) || IsKeyPressed(KEY_F) ||
+			(IsKeyPressed(KEY_ENTER) && (IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT))))
+		{
+
+			ToggleFullscreen();
+		}
 		// Update
 		if(!IsSoundPlaying(MainSound))
 		{
@@ -80,7 +89,7 @@ int main()
 		if (exitWindowRequested)
 
 		{
-			DrawRectangle(0, SCREENHEIGHT/4, SCREENWIDTH,SCREENHEIGHT/2 , BLACK);
+			DrawRectangle(0, SCREENWIDTH/4,SCREENWIDTH,SCREENHEIGHT/4 , BLACK);
 			DrawTextEx(game.fort,"Are you sure you want to exit the game? [Y/N]",{80,350},45,0.4,WHITE);
 		}
 		EndDrawing();

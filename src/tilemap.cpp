@@ -99,7 +99,7 @@ void TileMap::LoadMap()
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { ((float)(x * tile_width) + tile_width / 2)+2, (float)(y * tile_height) + 2, ((float)tile_width-4) / 2, (float)tile_height - 4 };
+						dest1 = { ((float)(x * tile_width) + tile_width / 2)+2, (float)(y * tile_height) + 2, ((float)tile_width/4), (float)tile_height - 4 };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
@@ -129,7 +129,7 @@ void TileMap::LoadMap()
 					{
 
 						LavaPoint.push_back({ (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height });
-						dest1 = { (float)(x * tile_width)+5 , (float)(y * tile_height+1), (float)tile_width - 7, (float)tile_height };
+						dest1 = { (float)(x * tile_width)+5 , (float)(y * tile_height+1), (float)tile_width - 8, (float)tile_height };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
