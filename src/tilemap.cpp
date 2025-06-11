@@ -208,9 +208,9 @@ void TileMap::DrawMap()
 
 	}
 
-	for (int i = 0;i < GridCollisionCoord.size();i++) {
-		DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, SKYBLUE);
-	}
+	//for (int i = 0;i < GridCollisionCoord.size();i++) {
+	//	DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, SKYBLUE);
+	//}
 
 }
 

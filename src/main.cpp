@@ -1,6 +1,7 @@
-#include <raylib.h>
+
 #include "game.h"
 #include <iostream>
+
 
 int main()
 
@@ -26,7 +27,6 @@ int main()
 	MainGame game;
 
 
-
 	// Main game loop
 	while (!exitWindow)
 
@@ -36,8 +36,11 @@ int main()
 			(IsKeyPressed(KEY_ENTER) && (IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT))))
 		{
 
-			ToggleFullscreen();
+			if (!(game.currentState == GameState::GAMEOVER)) {
+				ToggleFullscreen();
+			}
 		}
+		
 		// Update
 		if(!IsSoundPlaying(MainSound))
 		{
@@ -66,6 +69,8 @@ int main()
 				
 			}
 		}
+
+
 
 		float deltaTime = GetFrameTime();
 		if (game.currentState == GameState::PLAYING) {

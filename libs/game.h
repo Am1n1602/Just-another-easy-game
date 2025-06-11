@@ -18,7 +18,8 @@ enum class GameState
 	MENU,
 	PLAYING,
 	PAUSE,
-	GAMEOVER
+	GAMEOVER,
+	LEADERBOARD
 
 };
 
@@ -38,9 +39,12 @@ private:
 	void UpdatePause(float deltaTime);
 	void DrawGameOver(Texture2D);
 	void UpdateGameOver();
+	void DrawLeaderboard();
+	void UpdateLeaderboard();
 
 public:
 
+	void FetchInBackground();
 	GameState currentState;
 	Camera2D camera;
 	// Constructor and Destructor
