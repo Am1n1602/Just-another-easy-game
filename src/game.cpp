@@ -211,15 +211,21 @@ void MainGame::DrawPause(Texture2D MainMenuBg)
 
 }
 
+float alpha = 1.0f;
+float fadespeed = -0.005f;
+
 void MainGame::DrawGameOver(Texture2D MainMenuBg)
 
 {
+
+	Color FadingBlackGround = { 0,0,0,(int)(alpha * 255) };
 	DrawTexturePro(MainMenuBg, { 0,0,(float)MainMenuBg.width,(float)MainMenuBg.height }, { 0,0,SCREENWIDTH,SCREENHEIGHT }, { 0,0 }, 0.0f, WHITE);
 	DrawRectangleRounded({ 0.3*SCREENWIDTH,0.44*SCREENHEIGHT,SCREENWIDTH/3,SCREENHEIGHT/5 }, 0.2, 1, VibrantOrange);
 	DrawRectangleRoundedLinesEx({ 0.3 * SCREENWIDTH,0.44 * SCREENHEIGHT,SCREENWIDTH / 3,SCREENHEIGHT / 5 }, 0.3, 1, 2, WHITE);
 	DrawTextPro(GetFontDefault(), "!!! Congratulations !!! ", {0.35 * SCREENWIDTH,0.46 * SCREENHEIGHT}, {0,0}, 0.0f, 34, 2, BLACK);
 	DrawTextPro(GetFontDefault(), TextFormat("You took %d mins %d secs %d ms", FinalMin, FinalSec, FinalMs), { 0.317 * SCREENWIDTH, 0.52 * SCREENHEIGHT }, { 0,0 }, 0.0f, 27, 2, BLACK);
 	DrawTextPro(GetFontDefault(), TextFormat("You died only %d times", DeathCount), { 0.323 * SCREENWIDTH, 0.57 * SCREENHEIGHT }, { 0,0 }, 0.0f, 27, 2, BLACK);
+	DrawRectangle(0, 0, SCREENWIDTH, SCREENHEIGHT, FadingBlackGround);
 }
 
 // Update the Playing area 
@@ -364,10 +370,20 @@ void MainGame::UpdatePause(float deltaTime)
 void MainGame::UpdateGameOver()
 
 {
+	alpha += fadespeed;
+
+	if (alpha <= 0)
+	{
+		alpha = 0.0f;
+		fadespeed = 0;
+	}
+
 	if (GetKeyPressed())
 	{
 		currentState = GameState::MENU;
 		isReset = true;
+		alpha = 1.0f;
+		fadespeed = -0.005f;
 	}
 }
 

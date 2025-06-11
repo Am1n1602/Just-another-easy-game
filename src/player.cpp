@@ -11,7 +11,7 @@
 
 // VERY IMPORTANT DO NOT CHANGE PLAYERVELOCITY IN X **SPOILER: IT WILL BREAK A MAJOR OBSTACLE 
 
-Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 32,530 }), currentPlayerState(PlayerState::IDLE),
+Player::Player() : PlayerDirection(Direction::RIGHT), PlayerVelocity({ 2.42,2 }), PlayerPosition({ 1472,384 }), currentPlayerState(PlayerState::IDLE),
 jumpForce(-6.0f), isJumping(false), gravity(0.3f), verticalJumpVelocity(0.0f), Groundlevel({ 32,544 }) {
 }
 
@@ -174,8 +174,8 @@ void Player::PlayerPositionUpdate(Vector2 PlayerPosition,bool &isReset,bool &isW
 	if (isJumping)
 
 	{
-		float dt=GetFrameTime();
-		verticalJumpVelocity += gravity*dt*45;
+		
+		verticalJumpVelocity += gravity*0.0166720*45;
 		dy = verticalJumpVelocity;
 
 	}

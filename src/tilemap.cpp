@@ -119,7 +119,7 @@ void TileMap::LoadMap()
 					{
 
 						dest = { (float)(x * tile_width), (float)(y * tile_height), (float)tile_width, (float)tile_height };
-						dest1 = { (float)(x * tile_width+2) , (float)(y * tile_height) + 3*tile_height / 4, (float)tile_width - 4, (float)tile_height / 2 };
+						dest1 = { (float)(x * tile_width)+5 , (float)(y * tile_height) + 3*tile_height / 4, (float)tile_width - 7, (float)tile_height / 2 };
 						ObjectCollisionCoord.push_back(dest1);
 
 					}
@@ -208,9 +208,9 @@ void TileMap::DrawMap()
 
 	}
 
-	//for (int i = 0;i < GridCollisionCoord.size();i++) {
-	//	DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, SKYBLUE);
-	//}
+	for (int i = 0;i < GridCollisionCoord.size();i++) {
+		DrawRectangleLinesEx({ GridCollisionCoord[i].x, GridCollisionCoord[i].y, GridCollisionCoord[i].width, GridCollisionCoord[i].height}, 1, SKYBLUE);
+	}
 
 }
 
