@@ -20,31 +20,41 @@ if (NOT raylib_FOUND)
   FetchContent_Declare(
     raylib
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
+  
   )
   FetchContent_MakeAvailable(raylib)
 endif()
 
-# Try to find or fetch nlohmann_json
-find_package(nlohmann_json 3.2.0 QUIET)
-if (NOT nlohmann_json_FOUND)
-  FetchContent_Declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-  )
-  FetchContent_MakeAvailable(json)
+# Platform-specific OpenSSL hinting
+if(APPLE)
+  set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl@1.1")
+elseif(WIN32)
+  # Windows users must set this path manually if OpenSSL isn't globally available
+  set(OPENSSL_ROOT_DIR "C:/OpenSSL-Win64")
+elseif(UNIX AND NOT APPLE)
+  set(OPENSSL_ROOT_DIR "/usr")
 endif()
 
-# Try to find or fetch CPR
-find_package(CPR CONFIG QUIET)
-if (NOT CPR_FOUND)
-  FetchContent_Declare(
-    cpr
-    GIT_REPOSITORY https://github.com/libcpr/cpr.git
-  )
-  FetchContent_MakeAvailable(cpr)
-endif()
+# Fetch nlohmann_json
+FetchContent_Declare(
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
 
-# Define executable\ nadd_executable(Just_Another_Easy_Game ${SOURCE_FILES})
+)
+FetchContent_MakeAvailable(json)
+
+# Fetch CPR with SSL support
+set(CPR_USE_SYSTEM_CURL OFF)
+set(CPR_ENABLE_SSL ON)
+FetchContent_Declare(
+  cpr
+  GIT_REPOSITORY https://github.com/libcpr/cpr.git
+
+)
+FetchContent_MakeAvailable(cpr)
+
+# Define executable
+add_executable(Just_Another_Easy_Game ${SOURCE_FILES})
 
 # Only this target gets these include dirs
 target_include_directories(Just_Another_Easy_Game
@@ -54,17 +64,11 @@ target_include_directories(Just_Another_Easy_Game
 )
 
 # Link libraries
-# raylib, CPR, and JSON
-
-find_package(raylib REQUIRED)
-find_package(nlohmann_json REQUIRED)
-find_package(CPR REQUIRED)
-
 target_link_libraries(Just_Another_Easy_Game
   PRIVATE
     raylib
     nlohmann_json::nlohmann_json
-    CPR::cpr
+    cpr::cpr
 )
 
 # Warnings as errors or just extra pedantry
