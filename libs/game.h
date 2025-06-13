@@ -3,7 +3,6 @@
 #include <raylib.h>
 #include <cmath>
 
-
 const int SCREENHEIGHT = 720;
 const int SCREENWIDTH = 1280;
 
@@ -13,18 +12,15 @@ const Color BlueBlue = { 30, 144, 255,255 };
 const Color BlueBlueTrans = Fade(BlueBlue, 0.6f);
 
 enum class GameState
-
 {
 	MENU,
 	PLAYING,
 	PAUSE,
 	GAMEOVER,
 	LEADERBOARD
-
 };
 
 class MainGame
-
 {
 
 private:
@@ -43,7 +39,6 @@ private:
 	void UpdateLeaderboard();
 
 public:
-
 	void FetchInBackground();
 	GameState currentState;
 	Camera2D camera;
@@ -52,9 +47,9 @@ public:
 	~MainGame();
 	void InitialCamera();
 	static int DeathCount;
-	Font fort;
+	Font fort; 
+	GameState Laststate;
 	// Main Draw function
-
 	static float TotalTime;
 	void TimeTaken(float deltaTime,bool ShouldRun);
 	void Draw();

@@ -2,7 +2,6 @@
 
 #include <raylib.h>
 
-
 enum class AnimationType
 
 {
@@ -16,7 +15,6 @@ class Animation
 {
 
 private:
-
 	int firstFrame;
 	int currentFrame;
 	int lastFrame;

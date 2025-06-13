@@ -1,6 +1,6 @@
 #include "objects.h"
 #include <iostream>
-Objects::Objects(): currentTypeObject(LAVA) {}
+Objects::Objects(): currentTypeObject(LAVA),PositionX(0.0f),PositionY(0.0f) {}
 Objects::~Objects() {}
 
 Player Objplayer;
@@ -10,25 +10,23 @@ static Texture2D Coin = { 0 };
 static Texture2D HeartEffect = { 0 };
 static Texture2D LavaEffect = { 0 };
 
-
 void Objects::LoadObjects()
-
 {
 	if (Coin.id == 0)
-
 	{
 		Coin = LoadTexture("assets/Card.png");
 	}
-	if (HeartEffect.id == 0)
 
+	if (HeartEffect.id == 0)
 	{
 		HeartEffect = LoadTexture("assets/lost_hearts_anim_strip_5.png");
 	}
-    if (LavaEffect.id == 0) {
+
+    if (LavaEffect.id == 0) 
+    {
         LavaEffect = LoadTexture("assets/lava.png");
     }
 }
-
 
 void Objects::DrawObjects(Animation Object, TYPEOBJECT currentObjectType)
 {
@@ -69,7 +67,6 @@ void Objects::DrawObjects(Animation Object, TYPEOBJECT currentObjectType)
 }
 
     void Objects::UnloadObjects()
-
     {
         UnloadTexture(Coin);
         UnloadTexture(HeartEffect);

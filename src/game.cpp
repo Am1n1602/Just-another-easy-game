@@ -9,54 +9,42 @@
 #include <mutex>
 #include <iomanip>
 
-
 static std::vector<LeaderboardEntry> cachedTimeEntries;
 static std::vector<LeaderboardEntry> cachedDeathEntries;
 static std::mutex leaderboardMutex;
 
-// Initial the global variables
-
-
 MainGame::MainGame() : currentState(GameState::MENU), isLoaded(false),
-camera(),fort(LoadFont("assets/DungeonChunkMono.otf")),GameShouldClose(false) {
+camera(),fort(LoadFont("assets/DungeonChunkMono.otf")),GameShouldClose(false),Laststate(GameState::LEADERBOARD) {
 }
 MainGame::~MainGame() {}
 
-//<- TODO: Add the player class and imply it ->//
-// <-Update 1: Partially done player class (idle,run,attack,jump) ->
-
-//<--TODO: Add camera class and Background scrolling>
-// <-Update 2: both done->
-
-// <--TODO: Make Camera more smoother-->
-// Done, Added Camera Smoothness
-
-bool isLddrawn = false;
 int MainGame::DeathCount = 0;
+int FinalMin = 0;
+int FinalSec = 0;
+int FinalMs = 0;
+static int lettercount = 0;
+float alpha = 1.0f;
+float fadespeed = -0.005f;
+const float CAMERA_SMOOTHNESS = 0.04f;
 float MainGame::TotalTime = 0;
-int ldTime = 0;
+bool isLeaderboard = false;
 bool SwitchMenu = false;
 bool PauseToResume = false;
 bool PauseToExit = false;
-static bool flushed = false;
 bool MenuToExit = false;
 bool isReset = false;
 bool isWin = false;
 bool timeORdeath = false;
 bool toEntry = false;
-static std::string name = "";
-static int lettercount = 0;
+static bool flushed = false;
+static bool isFetching = false;
+bool isBgLoaded = false;
 static double lastTime = 0;
 const double fetchInt = 60;
-int FinalMin = 0;
-int FinalSec = 0;
-int FinalMs = 0;
-static bool isFetching = false;
+double globalTime = 0;
+static std::string name = "";
+Texture2D MainMenuBg;
 Sound ButtonSound;
-bool isLeaderboard = false;
-GameState Laststate = GameState::LEADERBOARD;
-
-
 
 Player player;
 Animation playerAnim;
@@ -66,10 +54,9 @@ Objects allObjects;
 
 Vector2 PlayerStartingPosition = player.PlayerPosition;
 
-const float CAMERA_SMOOTHNESS = 0.04f;
-
 void MainGame::FetchInBackground() {
-	try {
+	try 
+	{
 		std::vector<LeaderboardEntry> timeData = FetchLeaderboard("time");
 		std::vector<LeaderboardEntry> deathData = FetchLeaderboard("deaths");
 
@@ -79,10 +66,10 @@ void MainGame::FetchInBackground() {
 			cachedDeathEntries = std::move(deathData);
 		}
 	}
+
 	catch (const std::exception& e) {
 		std::cerr << "Fetch error: " << e.what() << std::endl;
 	}
-
 	isFetching = false;
 }
 
@@ -98,51 +85,37 @@ void MainGame::InitialCamera()
 // Draw the main menu
 
 void MainGame::DrawMenu(Texture2D MainMenuBg)
-
 {
-	
 	DrawTexturePro(MainMenuBg, { 0,0,(float)MainMenuBg.width,(float)MainMenuBg.height }, { 0,0,SCREENWIDTH,SCREENHEIGHT }, { 0,0 }, 0.0f, WHITE);
 
 	DrawRectangleRounded({ 350,350,200,60 }, 0.2, 1, TransParentGray);
-	if (!SwitchMenu) {
+	if (!SwitchMenu)
+	{
 		DrawRectangleRoundedLinesEx({ 350,350,200,60 }, 0.3, 1, 2, WHITE);
 		DrawTextPro(fort, "START GAME", { 353,360 }, { 0,0 }, 0.0f, 34, 2, WHITE);
 	}
-	else {
+	else
+	{
 		DrawRectangleRoundedLinesEx({ 350,350,200,60 }, 0.3, 1, 2, BLUE);
 		DrawTextPro(fort, "START GAME", { 353,360 }, { 0,0 }, 0.0f, 34, 2, SKYBLUE);
 	}
+
 	DrawRectangleRounded({ 650,350,200,60 }, 0.2, 1, TransParentGray);
-	if (!MenuToExit) {
+	if (!MenuToExit)
+	{
 		DrawTextPro(fort, "QUIT GAME", { 660,360 }, { 0,0 }, 0.0f, 34, 2, WHITE);
 		DrawRectangleRoundedLinesEx({ 650,350,200,60 }, 0.3, 1, 2, WHITE);
 	}
-	else {
+	else 
+	{
 		DrawTextPro(fort, "QUIT GAME", { 660,360 }, { 0,0 }, 0.0f, 34, 2, BLUE);
 		DrawRectangleRoundedLinesEx({ 650,350,200,60 }, 0.3, 1, 2, SKYBLUE);
 	}
 
-	/*DrawRectangle(0, 0, SCREENWIDTH, SCREENHEIGHT, SKYBLUE);
-
-	const char* title = "My first Game";
-	int titleWidth = MeasureText(title, 60);
-	DrawText(title, SCREENWIDTH / 2 - titleWidth / 2, SCREENHEIGHT / 4, 60, DARKGREEN);
-
-	const char* start = "Press SPACE to Start";
-	int startWidth = MeasureText(start, 30);
-	DrawText(start, SCREENWIDTH / 2 - startWidth / 2, 2 * SCREENHEIGHT / 3, 30, DARKGRAY);*/
-
 }
 
-// Draw the Playing Arena
-
-
-
-
 void MainGame::UpdateCamera(float deltaTime)
-
 {
-
 
 	// One-third rule: player should be at 1/3 of the screen width
 	float oneThirdX = SCREENWIDTH / 3.0f;
@@ -150,22 +123,16 @@ void MainGame::UpdateCamera(float deltaTime)
 
 	// Desired camera target so player appears at (oneThirdX, oneThirdY) on screen
 	Vector2 desiredTarget{};
-	desiredTarget.x = player.PlayerPosition.x - oneThirdX / camera.zoom;
-	
+	desiredTarget.x = player.PlayerPosition.x - oneThirdX / camera.zoom;	
 	desiredTarget.y = player.PlayerPosition.y - oneThirdY / camera.zoom;
 
 	// Smoothly interpolate camera.target towards desiredTarget
 	camera.target.x += (desiredTarget.x - camera.target.x) * CAMERA_SMOOTHNESS;
 	camera.target.y += (desiredTarget.y - camera.target.y) * CAMERA_SMOOTHNESS;
 
-
 }
 
-
-double globalTime = 0;
-
 void MainGame::TimeTaken(float deltatime,bool ShouldRun)
-
 {
 	double elapsed = TotalTime += deltatime;
 	globalTime = elapsed;
@@ -174,27 +141,19 @@ void MainGame::TimeTaken(float deltatime,bool ShouldRun)
 		TotalTime = 0;
 		DeathCount = 0;
 	}
-	
 	double currentTime = GetTime();
 
 	if (((currentTime - lastTime > fetchInt) || lastTime == 0) && !isFetching) {
 		lastTime = currentTime;
-
 		// Mark fetching BEFORE starting thread to avoid race conditions
 		isFetching = true;
-
 		std::thread fetchThread(&MainGame::FetchInBackground, this);
 		fetchThread.detach();
 	}
-
-	
 }
 
-
 void MainGame::DrawPlaying()
-
 {
-
 	BeginMode2D(camera);
 	Terrain::DrawBackground(player);
 	gameMap.DrawMap();
@@ -202,12 +161,11 @@ void MainGame::DrawPlaying()
 	allObjects.DrawObjects(object,TYPEOBJECT::COIN);
 	allObjects.DrawObjects(object, TYPEOBJECT::LAVA);
 
-	if (TotalTime <= 10) {
-
+	if (TotalTime <= 10)
+	{
 		DrawText("PRESS D for Right Movement ", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 70, 10, YELLOW);
 		DrawText("PRESS A for Left Movement", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 50, 10, YELLOW);
 		DrawText("PRESS SPACE for Jump", PlayerStartingPosition.x + 40, PlayerStartingPosition.y - 30, 10, YELLOW);
-
 	}
 
 	if (TotalTime <= 15 && TotalTime > 10)
@@ -216,61 +174,52 @@ void MainGame::DrawPlaying()
 	}
 
 	DrawRectangleRounded({ camera.target.x + 10,camera.target.y + 10,130,40 }, 0.2, 1, BlueBlueTrans);
-
 	DrawRectangleRoundedLinesEx({ camera.target.x + 10,camera.target.y + 10,130,40 }, 0.3, 1, 2, LIGHTGRAY);
 
-	Vector2 Temp = {camera.target.x + 20, camera.target.y + 20};
-	Vector2 Temp2 = { camera.target.x + 20, camera.target.y + 35 };
-	DrawTextEx(fort,TextFormat("DEATH COUNT: %d", DeathCount),Temp,10,2,YELLOW);
+	Vector2 DeathCountDisplay = {camera.target.x + 20, camera.target.y + 20};
+	Vector2 TimeDisplay = { camera.target.x + 20, camera.target.y + 35 };
+	DrawTextEx(fort,TextFormat("DEATH COUNT: %d", DeathCount),DeathCountDisplay,10,2,YELLOW);
 	int minutes = static_cast<int> (globalTime) / 60;
-	FinalMin = minutes;
 	int seconds = static_cast<int> (globalTime) % 60;
-	FinalSec = seconds;
 	int milliseconds = static_cast<int> (std::fmod(globalTime, 1.0) * 1000);
+	FinalMin = minutes;
+	FinalSec = seconds;
 	FinalMs = milliseconds;
-	DrawTextEx(fort, TextFormat("TIME: %02d:%02d:%02d", minutes,seconds,milliseconds), Temp2, 10, 2, YELLOW);
-
-
-	
+	DrawTextEx(fort, TextFormat("TIME: %02d:%02d:%02d", minutes,seconds,milliseconds), TimeDisplay, 10, 2, YELLOW);
 	EndMode2D();
-	
-
 }
 
 void MainGame::DrawPause(Texture2D MainMenuBg)
-
 {
 	DrawTexturePro(MainMenuBg, { 0,0,(float)MainMenuBg.width,(float)MainMenuBg.height }, { 0,0,SCREENWIDTH,SCREENHEIGHT }, { 0,0 }, 0.0f, WHITE);
 	DrawRectangleRounded({ 350,350,200,60 }, 0.2, 1, TransParentGray);
-	if (!PauseToResume) {
+	if (!PauseToResume)
+	{
 		DrawRectangleRoundedLinesEx({ 350,350,200,60 }, 0.3, 1, 2, WHITE);
 		DrawTextPro(fort, "RESUME", { 383,360 }, { 0,0 }, 0.0f, 34, 2, WHITE);
 	}
-	else {
+
+	else
+	{
 		DrawRectangleRoundedLinesEx({ 350,350,200,60 }, 0.3, 1, 2, BLUE);
 		DrawTextPro(fort, "RESUME", { 383,360 }, { 0,0 }, 0.0f, 34, 2, SKYBLUE);
 	}
+
 	DrawRectangleRounded({ 650,350,200,60 }, 0.2, 1, TransParentGray);
 	if (!PauseToExit)
 	{
 	DrawTextPro(fort, "MAIN MENU", { 660,360 }, { 0,0 }, 0.0f, 34, 2, WHITE);
 	DrawRectangleRoundedLinesEx({ 650,350,200,60 }, 0.3, 1, 2, WHITE);
-
 	}
+
 	else {
 	DrawTextPro(fort, "MAIN MENU", { 660,360 }, { 0,0 }, 0.0f, 34, 2, BLUE);
 	DrawRectangleRoundedLinesEx({ 650,350,200,60 }, 0.3, 1, 2, SKYBLUE);
 	}
-
 }
 
-float alpha = 1.0f;
-float fadespeed = -0.005f;
-
 void MainGame::DrawGameOver(Texture2D MainMenuBg)
-
 {
-
 	Color FadingBlackGround = { 0,0,0,(int)(alpha * 255) };
 	DrawTexturePro(MainMenuBg, { 0,0,(float)MainMenuBg.width,(float)MainMenuBg.height }, { 0,0,SCREENWIDTH,SCREENHEIGHT }, { 0,0 }, 0.0f, WHITE);
 	DrawRectangleRounded({ 0.3*SCREENWIDTH,0.44*SCREENHEIGHT,SCREENWIDTH/3,SCREENHEIGHT/5 }, 0.2, 1, VibrantOrange);
@@ -282,48 +231,37 @@ void MainGame::DrawGameOver(Texture2D MainMenuBg)
 
 	if (toEntry)
 	{
-		const int screenWidth = 1280;
-		const int screenHeight = 720;
-
 		const int boxWidth = 500;
 		const int boxHeight = 60;
 		const int fontSize = 30;
-
-		const int inputX = (screenWidth - boxWidth) / 2;
-		const int inputY = (screenHeight - boxHeight) / 2;
-
+		const int inputX = (SCREENWIDTH - boxWidth) / 2;
+		const int inputY = (SCREENHEIGHT - boxHeight) / 2;
 		// Draw label above box
 		DrawRectangle(SCREENWIDTH/4,0.3*SCREENHEIGHT,SCREENWIDTH / 2,SCREENHEIGHT / 3 ,BLACK);
 		DrawText("Enter your name:", inputX, inputY - 40, 32, SKYBLUE);
-
 		// Input box background and border
 		DrawRectangleRounded({ (float)inputX, (float)inputY, (float)boxWidth, (float)boxHeight }, 0.2f, 4, ORANGE);
 		DrawRectangleRoundedLinesEx( { (float)inputX, (float)inputY, (float)boxWidth, (float)boxHeight }, 0.2f, 4, 2, SKYBLUE);
-
 		// Draw name text
 		DrawText(name.c_str(), inputX + 15, inputY + 15, fontSize, DARKGRAY);
-
 		// Blinking cursor
 		if ((GetTime() - floor(GetTime())) < 0.5) {
 			int textWidth = MeasureText(name.c_str(), fontSize);
 			DrawText("|", inputX + 15 + textWidth + 2, inputY + 15, fontSize, MAROON);
 		}
-
 		// Max character warning
 		if (lettercount >= 15) {
 			const char* warn = "Maximum 15 characters allowed!";
 			int warnWidth = MeasureText(warn, 20);
-			DrawText(warn, screenWidth / 2 - warnWidth / 2, inputY + boxHeight + 15, 20, RED);
+			DrawText(warn, SCREENWIDTH / 2 - warnWidth / 2, inputY + boxHeight + 15, 20, RED);
 		}
 	}
-
 }
 
 void MainGame::DrawLeaderboard()
 {
 	DrawRectangleRounded({ 0.1f * SCREENWIDTH, 0.1f * SCREENHEIGHT, 0.8f * SCREENWIDTH, 0.8f * SCREENHEIGHT }, 0.12f, 1, TransParentGray);
 	DrawTextPro(GetFontDefault(), "LEADERBOARD", { 0.35f * SCREENWIDTH, 0.14f * SCREENHEIGHT }, { 0,0 }, 0.0f, 50, 3, BLACK);
-
 	// Table headers
 	int startX = static_cast<int>(0.15f * SCREENWIDTH);
 	int startY = static_cast<int>(0.22f * SCREENHEIGHT);
@@ -339,12 +277,13 @@ void MainGame::DrawLeaderboard()
 	DrawText("TIME", colTime, startY, 30, DARKGRAY);
 
 	// GetTime() returns seconds since start
-
-
-	if (IsKeyPressed(KEY_T)) {
+	if (IsKeyPressed(KEY_T))
+	{
 		timeORdeath = true;
 	}
-	if (IsKeyPressed(KEY_D)) {
+
+	if (IsKeyPressed(KEY_D)) 
+	{
 		timeORdeath = false;
 	}
 
@@ -357,7 +296,8 @@ void MainGame::DrawLeaderboard()
 
 	if (timeORdeath) {
 		// Show time leaderboard
-		for (int i = 0; i < std::min(10, (int)timeentries.size()); ++i) {
+		for (int i = 0; i < std::min(10, (int)timeentries.size()); ++i)
+		{
 			const auto& entry = timeentries[i];
 			int y = startY + rowHeight * (i + 1);
 			DrawText(TextFormat("%d", i+1), colRank, y, 28, BLACK);
@@ -369,9 +309,12 @@ void MainGame::DrawLeaderboard()
 			DrawText(TextFormat("%02d:%02d:%03d ms", minutes, seconds, milliseconds), colTime, y, 28, BLACK);
 		}
 	}
-	else {
+
+	else
+	{
 		// Show death leaderboard
-		for (int i = 0; i < std::min(10, (int)deathentries.size()); ++i) {
+		for (int i = 0; i < std::min(10, (int)deathentries.size()); ++i)
+		{
 			const auto& entry = deathentries[i];
 			int y = startY + rowHeight * (i + 1);
 			DrawText(TextFormat("%d", i + 1), colRank, y, 28, BLACK);
@@ -383,17 +326,11 @@ void MainGame::DrawLeaderboard()
 			DrawText(TextFormat("%02d:%02d:%03d ms", minutes, seconds, milliseconds), colTime, y, 28, BLACK);
 		}
 	}
-
 }
 
-// Update the Playing area 
-
 void MainGame::UpdatePlaying(float deltaTime)
-
 {
-
 	if (!isLoaded)
-
 	{
 		Terrain::LoadBackground(); // Load resources only once
 		gameMap.LoadMap();
@@ -401,7 +338,6 @@ void MainGame::UpdatePlaying(float deltaTime)
 		allObjects.LoadObjects();
 		InitialCamera();
 		player.LoadPlayerSound();
-
 		isLoaded = true;
 	}
 
@@ -415,33 +351,25 @@ void MainGame::UpdatePlaying(float deltaTime)
 		currentState = GameState::PAUSE;
 		PlaySound(ButtonSound);
 	}
+
 	if (isWin && currentState==GameState::PLAYING)
 	{
 		currentState = GameState::GAMEOVER;
 	}
-	// if (IsKeyPressed(KEY_ESCAPE))
-	//{
-	//	currentState = GameState::MENU;
-	//} Uncomment in the final version 
+
 	if (IsKeyPressed(KEY_L) && !isLeaderboard)
 	{
 		currentState = GameState::LEADERBOARD;
 		isLeaderboard = true;
 		Laststate = GameState::PLAYING;
 	}
-
 }
 
-// Changes main menu to playing
-
 void MainGame::UpdateMenu(float deltaTime)
-
 {
 	Vector2 MousePos = GetMousePosition();
-
 	if (CheckCollisionPointRec(MousePos, { 350,350,200,60 }))
 	{
-		
 		SwitchMenu = true;
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
@@ -449,13 +377,13 @@ void MainGame::UpdateMenu(float deltaTime)
 			currentState = GameState::PLAYING;
 		}
 	}
-	else {
+
+	else 
+	{
 		SwitchMenu = false;
 	}
 
-
 	if (IsKeyPressed(KEY_ENTER))
-
 	{
 		PlaySound(ButtonSound);
 		currentState = GameState::PLAYING;
@@ -463,21 +391,21 @@ void MainGame::UpdateMenu(float deltaTime)
 
 	if (CheckCollisionPointRec(MousePos, { 650,350,200,60 }))
 	{
-
 		MenuToExit = true;
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 		{
 			currentState = GameState::MENU;
 			GameShouldClose = true;
 			PlaySound(ButtonSound);
-
 		}
 	}
-	else {
+
+	else
+	{
 		MenuToExit = false;
 	}
-	if (IsKeyPressed(KEY_ENTER))
 
+	if (IsKeyPressed(KEY_ENTER))
 	{
 		currentState = GameState::MENU;
 		PlaySound(ButtonSound);
@@ -489,40 +417,35 @@ void MainGame::UpdateMenu(float deltaTime)
 		isLeaderboard = true;
 		Laststate = GameState::MENU;
 	}
-
 }
 
 void MainGame::UpdatePause(float deltaTime)
-
 {
 	Vector2 MousePos = GetMousePosition();
 	if (currentState == GameState::PAUSE)
-
 	{
-		
 			if (CheckCollisionPointRec(MousePos, { 350,350,200,60 }))
 			{
-
 				PauseToResume = true;
 				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				{
 					PlaySound(ButtonSound);
-					currentState = GameState::PLAYING;
-					
+					currentState = GameState::PLAYING;		
 				}
 			}
-			else {
+			else 
+			{
 				PauseToResume = false;
 			}
-			if (IsKeyPressed(KEY_ESCAPE)) {
+
+			if (IsKeyPressed(KEY_ESCAPE)) 
+			{
 				PlaySound(ButtonSound);
 				currentState = GameState::PLAYING;
-				
 			}
 
 			if (CheckCollisionPointRec(MousePos, { 650,350,200,60 }))
 			{
-
 				PauseToExit = true;
 				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				{
@@ -531,10 +454,11 @@ void MainGame::UpdatePause(float deltaTime)
 					isReset = true;
 				}
 			}
-			else {
+
+			else 
+			{
 				PauseToExit = false;
 			}
-
 	}
 
 	if (IsKeyPressed(KEY_L) && !isLeaderboard)
@@ -546,69 +470,70 @@ void MainGame::UpdatePause(float deltaTime)
 }
 
 void MainGame::UpdateGameOver()
-
 {
 	alpha += fadespeed;
-
 	if (alpha <= 0)
 	{
 		alpha = 0.0f;
 		fadespeed = 0;
 	}
 
-	
 	int death = DeathCount;
 	float endtime = ((FinalMin * 60000) + (FinalSec * 1000) + FinalMs);
 
-	if (!toEntry && GetKeyPressed()) {
+	if (!toEntry && GetKeyPressed())
+	{
     toEntry = true;
     flushed = false;  // Set flush flag
-}
+	}
 
-// Step 2: Handle name input
-if (toEntry) {
-    // Step 2.1: Flush any leftover keypresses for 1 frame
-    if (!flushed) {
-        while (GetKeyPressed()) {}     // Flush regular keys
-        while (GetCharPressed()) {}    // Flush char inputs
-        flushed = true;
-    }
-    else {
-        // Step 2.2: Handle name input
-        int key = GetCharPressed();
-        while (key > 0) {
-            if ((key >= 32) && (key <= 125) && (lettercount < 15)) {
-                name += static_cast<char>(key);
-                lettercount++;
-            }
-            key = GetCharPressed();
-        }
+	if (toEntry) 
+	{
+		if (!flushed)
+		{
+			while (GetKeyPressed()) {}     // Flush regular keys
+			while (GetCharPressed()) {}    // Flush char inputs
+			flushed = true;
+		}
 
-        if (IsKeyPressed(KEY_BACKSPACE) && lettercount > 0) {
-            name.pop_back();
-            lettercount--;
-        }
+		else 
+		{
 
-        // Draw input UI
-        DrawText("Enter your name:", 100, 100, 30, BLACK);
-        DrawText(name.c_str(), 100, 140, 28, DARKGRAY);
+			int key = GetCharPressed();
+			while (key > 0) 
+			{
+				if ((key >= 32) && (key <= 125) && (lettercount < 15)) 
+				{
+					name += static_cast<char>(key);
+					lettercount++;
+				}
+				key = GetCharPressed();
+			}
 
-        if (IsKeyPressed(KEY_ENTER)) {
-            std::string playername(name);
-			SubmitScore(playername, death, endtime);
-            std::cout << playername << " " << death << " " << endtime << "\n";
+			if (IsKeyPressed(KEY_BACKSPACE) && lettercount > 0) {
+				name.pop_back();
+				lettercount--;
+			}
+			// Draw input UI
+			DrawText("Enter your name:", 100, 100, 30, BLACK);
+			DrawText(name.c_str(), 100, 140, 28, DARKGRAY);
 
-            // Reset
-			name.clear();
-			lettercount = 0;
-			currentState = GameState::MENU;
-			isReset = true;
-			alpha = 1.0f;
-			fadespeed = -0.005f;
-			toEntry = false;
-        }
-    }
-}
+			if (IsKeyPressed(KEY_ENTER))
+			{
+				std::string playername(name);
+				SubmitScore(playername, death, endtime);
+				std::cout << playername << " " << death << " " << endtime << "\n";
+				// Reset
+				name.clear();
+				lettercount = 0;
+				currentState = GameState::MENU;
+				isReset = true;
+				alpha = 1.0f;
+				fadespeed = -0.005f;
+				toEntry = false;
+			}
+		}
+	}
 }
 
 void MainGame::UpdateLeaderboard()
@@ -619,10 +544,12 @@ void MainGame::UpdateLeaderboard()
 		{
 			currentState = GameState::MENU;
 		}
+
 		else if (Laststate == GameState::PLAYING)
 		{
 			currentState = GameState::PLAYING;
 		}
+
 		else if (Laststate == GameState::PAUSE)
 		{
 			currentState = GameState::PAUSE;
@@ -631,14 +558,9 @@ void MainGame::UpdateLeaderboard()
 	}
 }
 
-// Main update function
-
 void MainGame::Update(float deltaTime)
-
 {
-
 	switch (currentState)
-
 	{
 	case GameState::MENU:
 		UpdateMenu(deltaTime);
@@ -655,21 +577,12 @@ void MainGame::Update(float deltaTime)
 		break;
 	case GameState::LEADERBOARD:
 		UpdateLeaderboard();
-
 	}
-
 }
 
-// Main draw function
-bool isBgLoaded = false;
-Texture2D MainMenuBg;
-
 void MainGame::Draw()
-
 {
-
 	switch (currentState)
-
 	{
 	case GameState::MENU:
 		if (!isBgLoaded)
@@ -677,7 +590,6 @@ void MainGame::Draw()
 			MainMenuBg = LoadTexture("assets/Main_Menu_Bg2.png");
 			ButtonSound = LoadSound("assets/615542__crash_358__sci-fi-ui-button-sound-018.wav");
 			isBgLoaded = true;
-
 		}
 		DrawMenu(MainMenuBg);
 		break;
@@ -685,6 +597,7 @@ void MainGame::Draw()
 	case GameState::PLAYING:
 		DrawPlaying();
 		break;
+
 	case GameState::PAUSE:
 		DrawPause(MainMenuBg);
 		break;
@@ -692,21 +605,19 @@ void MainGame::Draw()
 	case GameState::GAMEOVER:
 		DrawGameOver(MainMenuBg);
 		break;
+
 	case GameState::LEADERBOARD:
-			DrawLeaderboard();
+		DrawLeaderboard();
+		break;
 	}
 }
 
-
 void MainGame::Unload()
-
 {
-
 	Terrain::UnloadBackground();
 	gameMap.UnloadMap();
 	player.UnloadPlayer();
 	allObjects.UnloadObjects();
 	UnloadSound(ButtonSound);
 	UnloadTexture(MainMenuBg);
-
 }

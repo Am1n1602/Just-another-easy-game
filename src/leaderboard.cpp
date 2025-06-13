@@ -4,6 +4,8 @@
 
 using json = nlohmann::json;
 
+// For a post request
+
 bool SubmitScore(const std::string& name, int deaths, float time) {
     json body = {
         {"name", name},
@@ -19,6 +21,8 @@ bool SubmitScore(const std::string& name, int deaths, float time) {
 
     return r.status_code == 200;
 }
+
+// For fetch (GET) request
 
 std::vector<LeaderboardEntry> FetchLeaderboard(const std::string& sortBy) {
     cpr::Response r = cpr::Get(
@@ -38,6 +42,5 @@ std::vector<LeaderboardEntry> FetchLeaderboard(const std::string& sortBy) {
                 });
         }
     }
-
     return list;
 }

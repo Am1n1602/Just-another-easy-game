@@ -62,6 +62,3 @@ bool Animation::isFinished() const
 {
 	return currentAnimationType == AnimationType::ONESHOT && currentFrame == lastFrame && durationLeft == animationSpeed;
 }
-
-
-
